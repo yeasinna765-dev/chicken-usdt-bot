@@ -39,19 +39,20 @@
         .btn-green { background: var(--green-btn); color: white; }
 
         .shop-switch { display: flex; background: #e2e8f0; border-radius: 10px; padding: 3px; margin-bottom: 14px; }
-        .switch-btn { flex: 1; border: none; background: transparent; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .switch-btn { flex: 1; border: none; background: transparent; padding: 8px; border-radius: 8px; font-weight: bold; cursor: pointer; color: var(--text-main); }
         .switch-btn.active { background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .item-card { background: #fff; border-radius: var(--border-radius); padding: 12px; text-align: center; border: 1px solid #eef2f5; position: relative; }
+        .item-card { background: #ffffff; border-radius: var(--border-radius); padding: 14px; text-align: center; border: 1px solid #cbd5e1; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .badge { position: absolute; top: 8px; right: 8px; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
         .item-img { width: 64px; height: 64px; object-fit: contain; margin: 8px auto; display: block; }
-        .item-title { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-        .item-price-btn { background: var(--primary-cyan); border: none; padding: 8px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
+        .item-title { font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #1e293b; }
+        .item-price-btn { background: var(--primary-cyan); border: none; padding: 8px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; color: #000; margin-top: 6px; }
 
         .streak-grid { display: flex; gap: 6px; justify-content: space-between; margin-top: 8px; }
-        .streak-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 4px; text-align: center; flex: 1; font-size: 10px; cursor: pointer; }
-        .streak-box.completed { background: #dcfce7; border-color: #bbf7d0; color: #15803d; }
+        .streak-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 4px; text-align: center; flex: 1; font-size: 10px; color: #475569; }
+        .streak-box.completed { background: #dcfce7; border-color: #bbf7d0; color: #15803d; font-weight: bold; }
+        .streak-box.active-claim { background: #fef08a; border-color: #facc15; color: #854d0e; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; border-top: 1px solid #edf2f7; padding: 6px 0; z-index: 100; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--text-sub); border: none; background: none; cursor: pointer; }
@@ -89,7 +90,7 @@
     <!-- Header -->
     <div class="header">
         <div class="profile">
-            <div class="avatar"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=ChickenUSDT" alt="Avatar"></div>
+            <div class="avatar"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=ChikenUSDTBot" alt="Avatar"></div>
             <div class="user-info">
                 <span class="username" id="display-name">CHIKEN USDT</span>
                 <span class="sub-tag">Hens lay, you earn</span>
@@ -104,7 +105,7 @@
     <!-- 1. FARM TAB -->
     <div id="farm-tab" class="tab-content active">
         <div class="card" style="padding:10px; text-align:center;">
-            <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=600&auto=format&fit=crop&q=60" style="width:100%; height:140px; object-fit:cover; border-radius:12px; margin-bottom:10px;" alt="Farm">
+            <img src="https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=600&auto=format&fit=crop&q=60" style="width:100%; height:140px; object-fit:cover; border-radius:12px; margin-bottom:10px;" alt="Farm Hen">
         </div>
 
         <div class="card" style="background:#e6fcf5; border:1px solid #b2f2bb;">
@@ -145,7 +146,7 @@
         <!-- DAILY CORN CHECK-IN -->
         <div class="card">
             <div style="font-weight:bold; font-size:13px; margin-bottom:4px;">Daily corn check-in</div>
-            <div style="font-size:11px; color:var(--text-sub); margin-bottom:8px;">Claim your daily corn reward!</div>
+            <div style="font-size:11px; color:var(--text-sub); margin-bottom:8px;">Claim your daily corn reward (Once per day)!</div>
             <div class="streak-grid" id="streak-container">
                 <!-- Dynamically rendered -->
             </div>
@@ -182,14 +183,14 @@
         <!-- TOP UP -->
         <div id="topup-container" class="card">
             <div class="card" style="background:#e6fcf5; border:1px solid #b2f2bb; padding:10px; text-align:center; margin-bottom:12px;">
-                <div style="font-weight:bold; color:#2b8a3e; font-size:12px;">+20% on your first top-up</div>
-                <div style="font-size:10px; color:#40c057;">Extra dollars to spend on your farm.</div>
+                <div style="font-weight:bold; color:#2b8a3e; font-size:12px;">+20% on your first top-up bonus!</div>
+                <div style="font-size:10px; color:#40c057;">Extra 20% added when deposit is approved.</div>
             </div>
 
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">COIN</div>
             <div style="display:flex; gap:10px; margin-bottom:12px;">
-                <button id="coin-gram" onclick="selectTopCoin('GRAM')" class="switch-btn active" style="border:1px solid var(--primary-cyan)">GRAM</button>
-                <button id="coin-usdt" onclick="selectTopCoin('USDT')" class="switch-btn" style="border:1px solid #cbd5e1">USDT</button>
+                <button id="coin-gram" onclick="selectTopCoin('GRAM')" class="switch-btn active" style="border:2px solid var(--primary-cyan)">GRAM</button>
+                <button id="coin-usdt" onclick="selectTopCoin('USDT')" class="switch-btn" style="border:2px solid #cbd5e1">USDT</button>
             </div>
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-dp">3.00</span></div>
             <input type="number" id="topup-amount-input" class="admin-input" value="3">
@@ -379,7 +380,7 @@
             maintenanceMode: false
         };
 
-        // Persistent User State with localStorage
+        // Persistent User State with LocalStorage
         let currentUser = JSON.parse(localStorage.getItem('chiken_user')) || {
             telegramId: 7419171743,
             username: "@ur_yeasin",
@@ -392,13 +393,17 @@
             hasDeposited: false,
             referredEarnings: 0,
             streakDay: 1,
-            lastStreakClaim: 0,
+            lastStreakClaimDate: "",
             isBanned: false
         };
 
         let depositRequests = JSON.parse(localStorage.getItem('chiken_deposits')) || [];
         let withdrawalRequests = JSON.parse(localStorage.getItem('chiken_withdrawals')) || [];
-        let referralList = JSON.parse(localStorage.getItem('chiken_referrals')) || [];
+        let referralList = JSON.parse(localStorage.getItem('chiken_referrals')) || [
+            { username: "@n0_lname0", status: "Qualified", date: "11/07/26" },
+            { username: "@ahmedhossano", status: "Qualified", date: "11/07/26" },
+            { username: "@telegram_user_99", status: "Unqualified", date: "11/08/26" }
+        ];
 
         let pendingDepositAmount = 3.0;
         let activeTopCoin = 'GRAM';
@@ -438,7 +443,7 @@
                 document.getElementById('admin-nav-btn').style.display = 'flex';
             }
 
-            // Background Mining Simulator (Adds eggs every 5 seconds if hens > 0 and corn > 0)
+            // Background Mining Simulator
             setInterval(() => {
                 if (currentUser.hens.length > 0 && currentUser.corn > 0) {
                     let totalEggsPerMin = Math.floor(currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0) / 2880);
@@ -533,10 +538,17 @@
         function renderStreakGrid() {
             let html = '';
             let cornAmounts = [1000, 2000, 3000, 4000, 5000, 6000, 7000];
+            let todayStr = new Date().toDateString();
+            let alreadyClaimedToday = currentUser.lastStreakClaimDate === todayStr;
+
             for (let i = 1; i <= 7; i++) {
-                let isComp = i < currentUser.streakDay;
-                let isCurrent = i === currentUser.streakDay;
-                html += `<div class="streak-box ${isComp ? 'completed' : ''}" ${isCurrent ? 'onclick="claimStreak()"' : ''} style="${isCurrent ? 'border:2px solid #00ca72; cursor:pointer;' : ''}">
+                let isComp = i < currentUser.streakDay || (i === currentUser.streakDay && alreadyClaimedToday);
+                let isCurrent = i === currentUser.streakDay && !alreadyClaimedToday;
+                
+                let boxClass = isComp ? 'completed' : (isCurrent ? 'active-claim' : '');
+                let clickAttr = isCurrent ? 'onclick="claimStreak()"' : '';
+
+                html += `<div class="streak-box ${boxClass}" ${clickAttr}>
                     Day ${i}<br>🌽 ${(cornAmounts[i-1]/1000)}k
                 </div>`;
             }
@@ -544,11 +556,19 @@
         }
 
         function claimStreak() {
+            let todayStr = new Date().toDateString();
+            if (currentUser.lastStreakClaimDate === todayStr) {
+                showToast("You have already claimed today's streak!");
+                return;
+            }
+
             let cornAmounts = [1000, 2000, 3000, 4000, 5000, 6000, 7000];
             let reward = cornAmounts[currentUser.streakDay - 1];
             currentUser.corn += reward;
-            showToast(`Claimed 🌽 ${reward.toLocaleString()} corn!`);
+            currentUser.lastStreakClaimDate = todayStr;
             currentUser.streakDay = currentUser.streakDay >= 7 ? 1 : currentUser.streakDay + 1;
+            
+            showToast(`Claimed 🌽 ${reward.toLocaleString()} corn successfully!`);
             updateUI();
         }
 
@@ -613,7 +633,7 @@
                 return;
             }
 
-            depositRequests.push({
+            depositRequests.unshift({
                 id: Date.now(),
                 userId: currentUser.telegramId,
                 username: currentUser.username,
@@ -624,7 +644,7 @@
             });
 
             closeInvoiceModal();
-            showToast("Deposit request submitted with Trx & Memo!");
+            showToast("Deposit request submitted!");
             updateUI();
         }
 
@@ -652,7 +672,7 @@
             currentUser.withdrawable -= amt;
             currentUser.balance -= amt;
 
-            withdrawalRequests.push({
+            withdrawalRequests.unshift({
                 id: Date.now(),
                 userId: currentUser.telegramId,
                 username: currentUser.username,
@@ -661,7 +681,7 @@
                 status: 'Pending'
             });
 
-            showToast("Withdrawal request submitted with your address!");
+            showToast("Withdrawal request submitted!");
             updateUI();
         }
 
@@ -681,17 +701,19 @@
             `).join('') || '<div style="color:gray;">No withdrawal history</div>';
 
             if (currentUser.telegramId === config.adminTelegramId) {
-                document.getElementById('admin-dp-requests').innerHTML = depositRequests.filter(d => d.status === 'Pending').map(d => `
+                let pendingDeps = depositRequests.filter(d => d.status === 'Pending');
+                document.getElementById('admin-dp-requests').innerHTML = pendingDeps.map(d => `
                     <div class="history-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                        <span><b>User ID: ${d.userId}</b> | $${d.amount} | Memo: ${d.memo}</span>
+                        <span><b>User: ${d.userId}</b> | $${d.amount} | Memo: ${d.memo}</span>
                         <span style="font-size:10px; color:#555; word-break:break-all;">TrxHash: ${d.trxHash}</span>
                         <button onclick="approveDeposit(${d.id})" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; align-self:flex-end;">Approve</button>
                     </div>
                 `).join('') || '<div style="color:gray;">No pending deposits</div>';
 
-                document.getElementById('admin-wd-requests').innerHTML = withdrawalRequests.filter(w => w.status === 'Pending').map(w => `
+                let pendingWds = withdrawalRequests.filter(w => w.status === 'Pending');
+                document.getElementById('admin-wd-requests').innerHTML = pendingWds.map(w => `
                     <div class="history-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                        <span><b>User ID: ${w.userId}</b> requests $${w.amount}</span>
+                        <span><b>User: ${w.userId}</b> requests $${w.amount}</span>
                         <span style="font-size:10px; color:#555; word-break:break-all;">Address: ${w.address}</span>
                         <button onclick="approveWithdrawal(${w.id})" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; align-self:flex-end;">Approve Paid</button>
                     </div>
@@ -703,9 +725,19 @@
             let req = depositRequests.find(d => d.id === id);
             if (req) {
                 req.status = 'Approved';
-                currentUser.balance += req.amount;
+                
+                // First Deposit 20% Bonus Calculation
+                let finalCreditedAmt = req.amount;
+                if (!currentUser.hasDeposited) {
+                    finalCreditedAmt += req.amount * 0.20; // +20% bonus
+                    showToast(`First deposit approved with +20% bonus!`);
+                } else {
+                    showToast("Deposit approved successfully!");
+                }
+
+                currentUser.balance += finalCreditedAmt;
+                currentUser.withdrawable += finalCreditedAmt;
                 currentUser.hasDeposited = true;
-                showToast("Deposit approved successfully!");
                 updateUI();
             }
         }
@@ -723,11 +755,14 @@
             let item = [...shopHens, ...shopCorn].find(i => i.id === id);
             if (currentUser.balance >= item.price) {
                 currentUser.balance -= item.price;
+                currentUser.withdrawable = Math.min(currentUser.withdrawable, currentUser.balance);
+                
                 if (item.type === 'hen') {
                     currentUser.hens.push(item);
                     currentUser.referredEarnings += config.oneTimeRefReward;
                 }
                 if (item.type === 'corn') currentUser.corn += 50000;
+                
                 showToast("Purchased successfully!");
                 updateUI();
             } else {
@@ -811,8 +846,13 @@
 
         function adminModifyBalance(action) {
             let amt = parseFloat(document.getElementById('adm-target-amt').value) || 0;
-            if (action === 'add') currentUser.balance += amt;
-            else currentUser.balance = Math.max(0, currentUser.balance - amt);
+            if (action === 'add') {
+                currentUser.balance += amt;
+                currentUser.withdrawable += amt;
+            } else {
+                currentUser.balance = Math.max(0, currentUser.balance - amt);
+                currentUser.withdrawable = Math.max(0, currentUser.withdrawable - amt);
+            }
             showToast(`Balance ${action}ed successfully!`);
             updateUI();
         }
@@ -824,4 +864,4 @@
         }
     </script>
 </body>
-                    </html>
+                                                                                                           </html>
