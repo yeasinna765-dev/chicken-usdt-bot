@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CHICKEN USDT</title>
+    <title>CHIKEN USDT</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -35,7 +35,7 @@
         .stat-box { background: #fff; padding: 10px; border-radius: 12px; border: 1px solid #edf2f7; }
         .stat-val { font-size: 14px; font-weight: bold; margin-top: 4px; }
 
-        .btn-primary { width: 100%; background: var(--primary-cyan); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .btn-primary { width: 100%; background: var(--primary-cyan); color: #000; border: none; padding: 14px; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center;}
         .btn-green { background: var(--green-btn); color: white; }
 
         .shop-switch { display: flex; background: #e2e8f0; border-radius: 10px; padding: 3px; margin-bottom: 14px; }
@@ -60,79 +60,100 @@
         .admin-input { width: 100%; padding: 10px; margin: 6px 0 12px; border: 1px solid #cbd5e1; border-radius: 8px; }
         
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 12px; z-index: 1000; display: none; }
-        .history-list { font-size: 11px; text-align: left; max-height: 120px; overflow-y: auto; margin-top: 8px; }
-        .history-item { padding: 6px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; }
+        .history-list { font-size: 11px; text-align: left; max-height: 150px; overflow-y: auto; margin-top: 8px; }
+        .history-item { padding: 8px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
         .status-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; }
         .status-pending { background: #fef3c7; color: #d97706; }
         .status-approved { background: #dcfce7; color: #15803d; }
-        .status-rejected { background: #fee2e2; color: #b91c1c; }
     </style>
 </head>
 <body>
 
     <div id="toast" class="toast">Action notification</div>
 
+    <!-- MAINTENANCE OVERLAY -->
+    <div id="maintenance-screen" style="position:fixed; top:0; left:0; right:0; bottom:0; background:#f4f6f0; z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
+        <h2 style="color:#ef4444; margin-bottom:10px;">🛠️ Bot Under Maintenance</h2>
+        <p style="font-size:13px; color:#64748b;">We are currently upgrading our servers. Please check back later!</p>
+    </div>
+
     <!-- Header -->
     <div class="header">
         <div class="profile">
-            <div class="avatar"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=Chicken" alt="Avatar"></div>
+            <div class="avatar"><img src="https://api.dicebear.com/7.x/bottts/svg?seed=ChickenUSDT" alt="Avatar"></div>
             <div class="user-info">
-                <span class="username" id="display-name">CHICKEN USDT</span>
+                <span class="username" id="display-name">CHIKEN USDT</span>
                 <span class="sub-tag">Hens lay, you earn</span>
             </div>
         </div>
         <div class="header-balance">
-            $<span id="user-balance">0.0500</span>
+            $<span id="user-balance">0.0598</span>
             <button class="plus-btn" onclick="switchTab('wallet')">+</button>
         </div>
     </div>
 
     <!-- 1. FARM TAB -->
     <div id="farm-tab" class="tab-content active">
+        <div class="card" style="padding:10px; text-align:center;">
+            <img src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=600&auto=format&fit=crop&q=60" style="width:100%; height:140px; object-fit:cover; border-radius:12px; margin-bottom:10px;" alt="Farm">
+        </div>
+
         <div class="card" style="background:#e6fcf5; border:1px solid #b2f2bb;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <div style="font-weight:bold; font-size:13px; color:#2b8a3e;">SELL EGGS</div>
-                    <div style="font-size:12px; color:#40c057;"><span id="egg-count">0</span> → +$<span id="egg-val">0.0000</span></div>
+                    <div style="font-size:12px; color:#40c057;"><span id="egg-count">36</span> → +$<span id="egg-val">0.0001</span></div>
                 </div>
                 <button onclick="sellEggs()" class="btn-primary btn-green" style="width:auto; padding:8px 16px;">Sell Eggs</button>
+            </div>
+        </div>
+
+        <div class="card" style="background:#fff3bf; border:1px solid #ffe066;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-weight:bold; font-size:13px; color:#f59f00;">FEEDER SYSTEM</div>
+                    <div style="font-size:12px; color:#f08c00;">Corn: <span id="corn-count">0</span> bags</div>
+                </div>
+                <button onclick="feedHens()" class="btn-primary" style="width:auto; padding:8px 16px; background:#f59f00; color:white;">Feed Now</button>
             </div>
         </div>
 
         <div class="stats-grid">
             <div class="stat-box">
                 <div style="font-size:11px; color:var(--text-sub);">Eggs / day</div>
-                <div class="stat-val">🥚 <span id="daily-eggs">0</span></div>
+                <div class="stat-val">🥚 <span id="daily-eggs">5,000</span></div>
             </div>
             <div class="stat-box">
                 <div style="font-size:11px; color:var(--text-sub);">Earning / day</div>
-                <div class="stat-val">$<span id="daily-earn">0.00</span></div>
+                <div class="stat-val">$<span id="daily-earn">0.02</span></div>
             </div>
             <div class="stat-box">
                 <div style="font-size:11px; color:var(--text-sub);">Hens</div>
-                <div class="stat-val">🐓 <span id="hen-count">0</span></div>
+                <div class="stat-val">🐓 <span id="hen-count">1</span></div>
             </div>
         </div>
 
         <div class="card">
-            <div style="font-weight:bold; margin-bottom:8px;">Daily Reward</div>
-            <button onclick="claimDailyReward()" class="btn-primary">Claim Daily Reward ($0.01)</button>
+            <div style="font-weight:bold; margin-bottom:8px;">Joining Bonus</div>
+            <button onclick="claimJoiningBonus()" class="btn-primary">Claim Joining Bonus ($<span id="lbl-join-bonus">0.01</span>)</button>
         </div>
     </div>
 
-    <!-- 2. SHOP TAB -->
+    <!-- 2. SHOP TAB (Hens & Corn) -->
     <div id="shop-tab" class="tab-content">
         <div class="shop-switch">
             <button id="btn-cat-hens" class="switch-btn active" onclick="setShopCategory('hens')">Hens</button>
+            <button id="btn-cat-corn" class="switch-btn" onclick="setShopCategory('corn')">Corn</button>
         </div>
-        <div id="shop-hens-container" class="shop-grid"></div>
+        <div id="shop-container" class="shop-grid"></div>
     </div>
 
     <!-- 3. WALLET TAB -->
     <div id="wallet-tab" class="tab-content">
         <div class="card" style="background:linear-gradient(135deg, #19e6e6, #00b4d8); color:white;">
             <div style="font-size:12px;">BALANCE</div>
-            <div style="font-size:24px; font-weight:bold;">$<span id="wallet-balance">0.0500</span></div>
+            <div style="font-size:24px; font-weight:bold;">$<span id="wallet-balance">0.0598</span></div>
+            <div style="font-size:11px; opacity:0.9;">Withdrawable: $<span id="withdrawable-balance">0.0198</span></div>
         </div>
 
         <div class="shop-switch">
@@ -144,60 +165,138 @@
         <div id="topup-container" class="card">
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">COIN</div>
             <div style="display:flex; gap:10px; margin-bottom:12px;">
-                <button id="coin-gram-topup" onclick="selectTopupCoin('GRAM')" class="switch-btn active" style="border:1px solid var(--primary-cyan)">GRAM</button>
-                <button id="coin-usdt-topup" onclick="selectTopupCoin('USDT')" class="switch-btn" style="border:1px solid #cbd5e1">USDT</button>
+                <button id="coin-gram" onclick="selectTopCoin('GRAM')" class="switch-btn active" style="border:1px solid var(--primary-cyan)">GRAM</button>
+                <button id="coin-usdt" onclick="selectTopCoin('USDT')" class="switch-btn" style="border:1px solid #cbd5e1">USDT</button>
             </div>
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD)</div>
+            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-dp">3.00</span></div>
             <input type="number" id="topup-amount-input" class="admin-input" value="3">
             <button onclick="createInvoice()" class="btn-primary">Create invoice</button>
 
-            <div style="margin-top:16px; border-top:1px dashed #cbd5e1; padding-top:10px;">
+            <div style="margin-top:14px; border-top:1px dashed #cbd5e1; padding-top:10px;">
                 <div style="font-weight:bold; font-size:12px;">Deposit History</div>
-                <div id="deposit-history-list" class="history-list"></div>
+                <div id="user-deposit-history" class="history-list"></div>
             </div>
         </div>
 
         <!-- WITHDRAW -->
         <div id="withdraw-container" class="card" style="display:none;">
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">COIN</div>
-            <div style="display:flex; gap:10px; margin-bottom:12px;">
-                <button id="coin-gram-wd" onclick="selectWithdrawCoin('GRAM')" class="switch-btn active" style="border:1px solid var(--primary-cyan)">GRAM</button>
-                <button id="coin-usdt-wd" onclick="selectWithdrawCoin('USDT')" class="switch-btn" style="border:1px solid #cbd5e1">USDT</button>
+            <!-- Channels links -->
+            <div style="margin-bottom: 12px; display:flex; gap:8px;">
+                <a id="link-main-chan" href="https://t.me/" target="_blank" class="btn-primary" style="background:#e0f2fe; color:#0284c7; font-size:12px; padding:10px;">📢 Main Channel</a>
+                <a id="link-wd-chan" href="https://t.me/" target="_blank" class="btn-primary" style="background:#dcfce7; color:#15803d; font-size:12px; padding:10px;">💳 Payout Channel</a>
             </div>
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">YOUR ADDRESS</div>
-            <input type="text" id="wd-address-input" class="admin-input" placeholder="Enter TON address">
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD)</div>
-            <input type="number" id="wd-amount-input" class="admin-input" placeholder="0.00">
-            <button onclick="submitWithdrawal()" class="btn-primary" style="margin-bottom:10px;">Withdraw</button>
 
-            <div style="margin-top:16px; border-top:1px dashed #cbd5e1; padding-top:10px;">
+            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">WITHDRAWAL ADDRESS</div>
+            <input type="text" id="wd-address-input" class="admin-input" placeholder="Enter TON/TRON address">
+            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">0.01</span> (Limit: <span id="lbl-free-wd">1</span> free/day)</div>
+            <input type="number" id="wd-amount-input" class="admin-input" placeholder="0.01">
+            <button onclick="submitWithdrawal()" class="btn-primary">Withdraw</button>
+
+            <div style="margin-top:14px; border-top:1px dashed #cbd5e1; padding-top:10px;">
                 <div style="font-weight:bold; font-size:12px;">Withdrawal History</div>
-                <div id="withdraw-history-list" class="history-list"></div>
+                <div id="user-withdraw-history" class="history-list"></div>
             </div>
         </div>
     </div>
 
-    <!-- 4. ADMIN TAB (Visible ONLY to Telegram ID: 7419171743) -->
+    <!-- 4. FRIENDS TAB -->
+    <div id="friends-tab" class="tab-content">
+        <div class="card" style="background:linear-gradient(135deg, #33f0ff, #00d2ff); color:white; text-align:center;">
+            <h3>Invite friends, earn together</h3>
+            <p style="font-size:11px; margin-top:4px;">Earn <span id="lbl-ref-comm">10</span>% commission and $<span id="lbl-onetime-ref">0.02</span> when they buy their first package!</p>
+        </div>
+        <div class="card">
+            <div style="font-size:11px; color:var(--text-sub);">YOUR INVITE LINK</div>
+            <input type="text" class="admin-input" id="ref-link" value="" readonly>
+            <button onclick="copyRefLink()" class="btn-primary">Copy Link</button>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div style="font-size:10px; color:var(--text-sub);">Qualified Friends</div>
+                <div class="stat-val" id="ref-count">0</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:10px; color:var(--text-sub);">Earned</div>
+                <div class="stat-val">$<span id="ref-earned">0.00</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. ADMIN TAB (Protected for ID: 7419171743) -->
     <div id="admin-tab" class="tab-content">
         <div class="card">
-            <h2>👑 Admin Control Panel</h2>
+            <h2>👑 CHIKEN USDT Admin</h2>
+            
+            <!-- LIMITS & CONFIGS -->
             <div class="admin-section">
-                <h4>💰 Financial Settings</h4>
-                <label style="font-size:12px;">First Deposit Bonus (%):</label>
-                <input type="number" id="admin-dp-bonus" class="admin-input" value="20">
+                <h4>⚙️ Limits, Rates & Referral Config</h4>
+                <label style="font-size:12px;">Minimum Deposit ($):</label>
+                <input type="number" step="0.1" id="adm-min-dp" class="admin-input" value="3.0">
+                <label style="font-size:12px;">Minimum Withdrawal ($):</label>
+                <input type="number" step="0.01" id="adm-min-wd" class="admin-input" value="0.01">
+                <label style="font-size:12px;">Free Withdrawals Limit (per day):</label>
+                <input type="number" id="adm-free-wd" class="admin-input" value="1">
+                <label style="font-size:12px;">Joining Bonus ($):</label>
+                <input type="number" step="0.01" id="adm-join-bonus" class="admin-input" value="0.01">
+                <label style="font-size:12px;">One-time Referral Reward ($):</label>
+                <input type="number" step="0.01" id="adm-onetime-ref" class="admin-input" value="0.02">
+                <label style="font-size:12px;">Referral Deposit Commission (%):</label>
+                <input type="number" step="1" id="adm-ref-comm" class="admin-input" value="10">
                 <label style="font-size:12px;">GRAM Exchange Rate (1 USDT = X GRAM):</label>
-                <input type="number" step="0.01" id="admin-gram-rate" class="admin-input" value="1.0">
-                <button onclick="saveAdminSettings()" class="btn-primary">Save Settings</button>
+                <input type="number" step="0.01" id="adm-gram-rate" class="admin-input" value="0.92">
+                <label style="font-size:12px;">USDT Exchange Rate:</label>
+                <input type="number" step="0.01" id="adm-usdt-rate" class="admin-input" value="1.0">
+                <button onclick="saveAdminConfigs()" class="btn-primary">Save Settings</button>
             </div>
 
+            <!-- WALLET & CHANNELS -->
             <div class="admin-section">
-                <h4>📋 Pending Deposits</h4>
-                <div id="admin-pending-deposits" class="history-list"></div>
+                <h4>🔗 Deposit Address & Channels</h4>
+                <label style="font-size:12px;">Deposit Address:</label>
+                <input type="text" id="adm-dp-address" class="admin-input" value="UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B">
+                <label style="font-size:12px;">Main Channel Link:</label>
+                <input type="text" id="adm-main-link" class="admin-input" value="https://t.me/your_main_channel">
+                <label style="font-size:12px;">Payout Channel Link:</label>
+                <input type="text" id="adm-wd-link" class="admin-input" value="https://t.me/your_withdraw_channel">
+                <button onclick="saveAdminLinks()" class="btn-primary">Save Links</button>
             </div>
 
+            <!-- USER MANAGEMENT -->
             <div class="admin-section">
-                <h4>📋 Pending Withdrawals</h4>
-                <div id="admin-pending-withdrawals" class="history-list"></div>
+                <h4>👥 User Balance & Ban Management</h4>
+                <label style="font-size:12px;">Target Telegram ID:</label>
+                <input type="number" id="adm-target-id" class="admin-input" placeholder="User ID">
+                <label style="font-size:12px;">Amount ($):</label>
+                <input type="number" step="0.01" id="adm-target-amt" class="admin-input" placeholder="0.50">
+                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                    <button onclick="adminModifyBalance('add')" class="btn-primary" style="background:#22c55e; color:white;">Add Balance</button>
+                    <button onclick="adminModifyBalance('remove')" class="btn-primary" style="background:#f59f00; color:white;">Remove Balance</button>
+                </div>
+                <div style="display:flex; gap:8px;">
+                    <button onclick="adminBanUser(true)" class="btn-primary" style="background:#ef4444; color:white;">Ban User</button>
+                    <button onclick="adminBanUser(false)" class="btn-primary" style="background:#22c55e; color:white;">Unban User</button>
+                </div>
+            </div>
+
+            <!-- MAINTENANCE -->
+            <div class="admin-section">
+                <h4>🛠️ Bot Maintenance Mode</h4>
+                <div style="display:flex; gap:10px; margin-top:8px;">
+                    <button onclick="setMaintenance(true)" class="btn-primary" style="background:#ef4444; color:white;">Turn ON</button>
+                    <button onclick="setMaintenance(false)" class="btn-primary" style="background:#22c55e; color:white;">Turn OFF</button>
+                </div>
+            </div>
+
+            <!-- PENDING DEPOSIT REQUESTS -->
+            <div class="admin-section">
+                <h4>📥 Pending Deposit Requests</h4>
+                <div id="admin-dp-requests" class="history-list"></div>
+            </div>
+
+            <!-- PENDING WITHDRAWAL REQUESTS -->
+            <div class="admin-section">
+                <h4>📤 Pending Withdrawal Requests</h4>
+                <div id="admin-wd-requests" class="history-list"></div>
             </div>
         </div>
     </div>
@@ -206,11 +305,14 @@
     <div id="invoice-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>Deposit Invoice</h3>
-            <div style="font-size:12px; color:var(--text-sub); margin:10px 0;">Send to Address: <br><b>UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B</b></div>
-            <div style="font-weight:bold; font-size:16px; margin-bottom:10px;"><span id="modal-pay-amount">0.00</span> <span id="modal-pay-coin">GRAM</span></div>
-            <div style="font-size:11px; color:var(--text-sub); text-align:left;">Submit Transaction ID (TxID):</div>
-            <input type="text" id="modal-txid-input" class="admin-input" placeholder="Paste TxID here">
-            <button onclick="submitDepositRequest()" class="btn-primary btn-green" style="margin-bottom:8px;">Submit TxID</button>
+            <div style="font-size:12px; color:var(--text-sub); margin:10px 0;">Send to Address: <br><b id="modal-display-address">UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B</b></div>
+            <div style="font-size:11px; color:#ef4444; font-weight:bold; margin-bottom:6px;">MEMO (YOUR TELEGRAM ID): <span id="modal-memo">7419171743</span></div>
+            <div style="font-weight:bold; font-size:16px; margin-bottom:10px;"><span id="modal-pay-amount">2.76</span> <span id="modal-pay-coin">GRAM</span></div>
+            
+            <div style="font-size:11px; color:var(--text-sub); text-align:left; margin-bottom:4px;">Paste Transaction Hash (Trx Hash):</div>
+            <input type="text" id="modal-trx-input" class="admin-input" placeholder="Enter Trx Hash">
+
+            <button onclick="confirmDepositRequest()" class="btn-primary btn-green" style="margin-bottom:8px;">Submit Trx</button>
             <button onclick="closeInvoiceModal()" class="btn-primary" style="background:#64748b; color:white;">Cancel</button>
         </div>
     </div>
@@ -220,34 +322,57 @@
         <button class="nav-item active" onclick="switchTab('farm')"><span class="nav-icon">🏡</span>Farm</button>
         <button class="nav-item" onclick="switchTab('shop')"><span class="nav-icon">🏪</span>Shop</button>
         <button class="nav-item" onclick="switchTab('wallet')"><span class="nav-icon">💼</span>Wallet</button>
+        <button class="nav-item" onclick="switchTab('friends')"><span class="nav-icon">🐓</span>Friends</button>
         <button id="admin-nav-btn" class="nav-item" onclick="switchTab('admin')" style="display:none; color:#ef4444;"><span class="nav-icon">👑</span>Admin</button>
     </div>
 
     <script>
         let config = {
             adminTelegramId: 7419171743,
-            firstDepositBonusPct: 20,
-            gramExchangeRate: 1.0
+            minDeposit: 3.0,
+            minWithdraw: 0.01,
+            freeWithdrawLimit: 1,
+            joiningBonus: 0.01,
+            oneTimeRefReward: 0.02,
+            refCommissionPct: 10,
+            gramRate: 0.92,
+            usdtRate: 1.0,
+            depositAddress: "UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B",
+            mainChannelLink: "https://t.me/your_main_channel",
+            withdrawChannelLink: "https://t.me/your_withdraw_channel",
+            maintenanceMode: false
         };
 
         let currentUser = {
             telegramId: 7419171743,
-            username: "@admin_user",
-            balance: 0.05,
-            eggs: 0,
-            hens: []
+            username: "@ur_yeasin",
+            balance: 0.0598,
+            withdrawable: 0.0198,
+            eggs: 36,
+            corn: 0,
+            hens: [],
+            hasBoughtPackage: false,
+            referredCount: 0,
+            referredEarnings: 0,
+            isBanned: false
         };
 
-        let systemDeposits = [];
-        let systemWithdrawals = [];
-        let usedTxIds = new Set();
-        let activeTopupCoin = 'GRAM';
-        let activeWdCoin = 'GRAM';
+        let depositRequests = [];
+        let withdrawalRequests = [];
+        let pendingDepositAmount = 3.0;
+        let activeTopCoin = 'GRAM';
+        let shopCategory = 'hens';
 
-        const henPackages = [
-            { id: 1, name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50 },
-            { id: 2, name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50 },
-            { id: 3, name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00 }
+        const shopHens = [
+            { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50 },
+            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50 },
+            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00 },
+            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00 }
+        ];
+
+        const shopCorn = [
+            { id: 101, type: 'corn', name: "Corn Bag", rate: "+50,000 Corn", price: 0.15 },
+            { id: 102, type: 'corn', name: "Corn Sack", rate: "+250,000 Corn", price: 0.50 }
         ];
 
         window.onload = function() {
@@ -256,7 +381,14 @@
                 currentUser.telegramId = tgUser.id;
                 currentUser.username = "@" + (tgUser.username || "user_" + tgUser.id);
             }
-            document.getElementById('display-name').innerText = currentUser.username;
+
+            if (currentUser.isBanned) {
+                document.body.innerHTML = "<h1 style='text-align:center;margin-top:20vh;color:red;'>🚫 You are banned from this bot!</h1>";
+                return;
+            }
+
+            document.getElementById('display-name').innerText = "CHIKEN USDT";
+            document.getElementById('ref-link').value = `https://t.me/Chikenusdtbot?start=ref${currentUser.telegramId}`;
             
             if (currentUser.telegramId === config.adminTelegramId) {
                 document.getElementById('admin-nav-btn').style.display = 'flex';
@@ -264,7 +396,6 @@
 
             renderShop();
             updateUI();
-            setInterval(eggProductionCycle, 3000);
         };
 
         function showToast(msg) {
@@ -276,7 +407,7 @@
 
         function switchTab(tabId) {
             if (tabId === 'admin' && currentUser.telegramId !== config.adminTelegramId) {
-                showToast("Access Denied: Authorized Admin Only!");
+                showToast("Access Denied!");
                 return;
             }
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -288,26 +419,42 @@
         function updateUI() {
             document.getElementById('user-balance').innerText = currentUser.balance.toFixed(4);
             document.getElementById('wallet-balance').innerText = currentUser.balance.toFixed(4);
+            document.getElementById('withdrawable-balance').innerText = currentUser.withdrawable.toFixed(4);
             document.getElementById('egg-count').innerText = currentUser.eggs;
             document.getElementById('egg-val').innerText = (currentUser.eggs * 0.0000027).toFixed(4);
+            document.getElementById('corn-count').innerText = currentUser.corn.toLocaleString();
             document.getElementById('hen-count').innerText = currentUser.hens.length;
-            
-            let totalDailyEggs = currentUser.hens.reduce((acc, h) => acc + h.eggsPerDay, 0);
-            document.getElementById('daily-eggs').innerText = totalDailyEggs.toLocaleString();
-            document.getElementById('daily-earn').innerText = (totalDailyEggs * 0.0000027).toFixed(2);
 
-            renderHistories();
-            renderAdminApprovals();
+            document.getElementById('lbl-min-dp').innerText = config.minDeposit.toFixed(2);
+            document.getElementById('lbl-min-wd').innerText = config.minWithdraw.toFixed(2);
+            document.getElementById('lbl-free-wd').innerText = config.freeWithdrawLimit;
+            document.getElementById('lbl-join-bonus').innerText = config.joiningBonus.toFixed(2);
+            document.getElementById('lbl-onetime-ref').innerText = config.oneTimeRefReward.toFixed(2);
+            document.getElementById('lbl-ref-comm').innerText = config.refCommissionPct;
+
+            document.getElementById('link-main-chan').href = config.mainChannelLink;
+            document.getElementById('link-wd-chan').href = config.withdrawChannelLink;
+
+            document.getElementById('ref-count').innerText = currentUser.referredCount;
+            document.getElementById('ref-earned').innerText = currentUser.referredEarnings.toFixed(2);
+
+            renderHistoryLists();
+        }
+
+        function setShopCategory(cat) {
+            shopCategory = cat;
+            document.getElementById('btn-cat-hens').classList.toggle('active', cat === 'hens');
+            document.getElementById('btn-cat-corn').classList.toggle('active', cat === 'corn');
+            renderShop();
         }
 
         function renderShop() {
-            const hCont = document.getElementById('shop-hens-container');
-            hCont.innerHTML = henPackages.map(h => `
+            let items = shopCategory === 'hens' ? shopHens : shopCorn;
+            document.getElementById('shop-container').innerHTML = items.map(item => `
                 <div class="item-card">
-                    <div class="badge">${h.rate}</div>
-                    <div class="item-title">${h.name}</div>
-                    <div class="item-rate">🥚 ${h.eggsPerDay.toLocaleString()}/day</div>
-                    <button onclick="buyHen(${h.id})" class="item-price-btn">$${h.price.toFixed(2)}</button>
+                    <div class="badge">${item.rate}</div>
+                    <div class="item-title">${item.name}</div>
+                    <button onclick="buyItem(${item.id})" class="item-price-btn">$${item.price.toFixed(2)}</button>
                 </div>
             `).join('');
         }
@@ -319,23 +466,25 @@
             document.getElementById('btn-mode-withdraw').classList.toggle('active', mode === 'withdraw');
         }
 
-        function selectTopupCoin(coin) {
-            activeTopupCoin = coin;
-            document.getElementById('coin-gram-topup').classList.toggle('active', coin === 'GRAM');
-            document.getElementById('coin-usdt-topup').classList.toggle('active', coin === 'USDT');
-        }
-
-        function selectWithdrawCoin(coin) {
-            activeWdCoin = coin;
-            document.getElementById('coin-gram-wd').classList.toggle('active', coin === 'GRAM');
-            document.getElementById('coin-usdt-wd').classList.toggle('active', coin === 'USDT');
+        function selectTopCoin(coin) {
+            activeTopCoin = coin;
+            document.getElementById('coin-gram').classList.toggle('active', coin === 'GRAM');
+            document.getElementById('coin-usdt').classList.toggle('active', coin === 'USDT');
         }
 
         function createInvoice() {
-            let usdVal = parseFloat(document.getElementById('topup-amount-input').value) || 0;
-            let cryptoVal = activeTopupCoin === 'GRAM' ? (usdVal * config.gramExchangeRate) : usdVal;
-            document.getElementById('modal-pay-amount').innerText = cryptoVal.toFixed(2);
-            document.getElementById('modal-pay-coin').innerText = activeTopupCoin;
+            let amt = parseFloat(document.getElementById('topup-amount-input').value) || 0;
+            if (amt < config.minDeposit) {
+                showToast(`Minimum deposit is $${config.minDeposit}`);
+                return;
+            }
+            pendingDepositAmount = amt;
+            let convertedAmt = activeTopCoin === 'GRAM' ? (amt * config.gramRate) : (amt * config.usdtRate);
+
+            document.getElementById('modal-display-address').innerText = config.depositAddress;
+            document.getElementById('modal-memo').innerText = currentUser.telegramId;
+            document.getElementById('modal-pay-amount').innerText = convertedAmt.toFixed(2);
+            document.getElementById('modal-pay-coin').innerText = activeTopCoin;
             document.getElementById('invoice-modal').style.display = 'flex';
         }
 
@@ -343,126 +492,148 @@
             document.getElementById('invoice-modal').style.display = 'none';
         }
 
-        function submitDepositRequest() {
-            let txid = document.getElementById('modal-txid-input').value.trim();
-            if (!txid) { showToast("Enter a valid Transaction ID"); return; }
-            if (usedTxIds.has(txid)) { showToast("This TxID has already been used!"); return; }
-            usedTxIds.add(txid);
+        function confirmDepositRequest() {
+            let trxHash = document.getElementById('modal-trx-input').value.trim();
+            if (!trxHash) {
+                showToast("Please enter transaction hash!");
+                return;
+            }
 
-            let usdVal = parseFloat(document.getElementById('topup-amount-input').value);
-            systemDeposits.unshift({
+            depositRequests.push({
                 id: Date.now(),
                 userId: currentUser.telegramId,
                 username: currentUser.username,
-                amountUsd: usdVal,
-                coin: activeTopupCoin,
-                txid: txid,
+                amount: pendingDepositAmount,
+                trxHash: trxHash,
+                memo: currentUser.telegramId,
                 status: 'Pending'
             });
 
             closeInvoiceModal();
-            showToast("Deposit submitted for approval!");
+            showToast("Deposit request submitted with Trx & Memo!");
             updateUI();
         }
 
         function submitWithdrawal() {
             let addr = document.getElementById('wd-address-input').value.trim();
             let amt = parseFloat(document.getElementById('wd-amount-input').value) || 0;
-            if (!addr) { showToast("Enter withdrawal address"); return; }
-            if (amt > currentUser.balance) { showToast("Insufficient balance"); return; }
 
+            if (!addr) {
+                showToast("Please enter withdrawal address!");
+                return;
+            }
+            if (amt < config.minWithdraw) {
+                showToast(`Minimum withdrawal is $${config.minWithdraw}`);
+                return;
+            }
+            if (amt > currentUser.withdrawable) {
+                showToast("Exceeds withdrawable balance!");
+                return;
+            }
+
+            currentUser.withdrawable -= amt;
             currentUser.balance -= amt;
-            systemWithdrawals.unshift({
+
+            withdrawalRequests.push({
                 id: Date.now(),
                 userId: currentUser.telegramId,
                 username: currentUser.username,
                 address: addr,
-                amountUsd: amt,
-                coin: activeWdCoin,
+                amount: amt,
                 status: 'Pending'
             });
 
-            showToast("Withdrawal requested!");
+            showToast("Withdrawal request submitted with your address!");
             updateUI();
         }
 
-        function renderHistories() {
-            document.getElementById('deposit-history-list').innerHTML = systemDeposits.filter(d => d.userId === currentUser.telegramId).map(d => `
+        function renderHistoryLists() {
+            document.getElementById('user-deposit-history').innerHTML = depositRequests.filter(d => d.userId === currentUser.telegramId).map(d => `
                 <div class="history-item">
-                    <span>$${d.amountUsd} (${d.coin}) - Tx: ${d.txid.substring(0,6)}..</span>
+                    <span>$${d.amount.toFixed(2)} | Trx: ${d.trxHash.substring(0,6)}..</span>
                     <span class="status-badge status-${d.status.toLowerCase()}">${d.status}</span>
                 </div>
-            `).join('') || '<div style="color:gray;">No deposits</div>';
+            `).join('') || '<div style="color:gray;">No deposit history</div>';
 
-            document.getElementById('withdraw-history-list').innerHTML = systemWithdrawals.filter(w => w.userId === currentUser.telegramId).map(w => `
+            document.getElementById('user-withdraw-history').innerHTML = withdrawalRequests.filter(w => w.userId === currentUser.telegramId).map(w => `
                 <div class="history-item">
-                    <span>$${w.amountUsd} (${w.coin})</span>
+                    <span>$${w.amount.toFixed(2)} → ${w.address.substring(0,6)}...</span>
                     <span class="status-badge status-${w.status.toLowerCase()}">${w.status}</span>
                 </div>
-            `).join('') || '<div style="color:gray;">No withdrawals</div>';
-        }
+            `).join('') || '<div style="color:gray;">No withdrawal history</div>';
 
-        function renderAdminApprovals() {
-            if (currentUser.telegramId !== config.adminTelegramId) return;
+            if (currentUser.telegramId === config.adminTelegramId) {
+                document.getElementById('admin-dp-requests').innerHTML = depositRequests.filter(d => d.status === 'Pending').map(d => `
+                    <div class="history-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
+                        <span><b>User ID: ${d.userId}</b> | $${d.amount} | Memo: ${d.memo}</span>
+                        <span style="font-size:10px; color:#555; word-break:break-all;">TrxHash: ${d.trxHash}</span>
+                        <button onclick="approveDeposit(${d.id})" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; align-self:flex-end;">Approve</button>
+                    </div>
+                `).join('') || '<div style="color:gray;">No pending deposits</div>';
 
-            document.getElementById('admin-pending-deposits').innerHTML = systemDeposits.filter(d => d.status === 'Pending').map(d => `
-                <div class="history-item" style="flex-direction:column; gap:4px; padding:6px 0;">
-                    <div><b>${d.username}</b> | $${d.amountUsd} (${d.coin})</div>
-                    <div style="font-size:10px; color:#555;">TxID: ${d.txid}</div>
-                    <button onclick="approveDeposit(${d.id})" style="background:#22c55e; color:white; border:none; padding:4px; border-radius:4px;">Approve</button>
-                </div>
-            `).join('') || '<div>No pending deposits</div>';
-
-            document.getElementById('admin-pending-withdrawals').innerHTML = systemWithdrawals.filter(w => w.status === 'Pending').map(w => `
-                <div class="history-item" style="flex-direction:column; gap:4px; padding:6px 0;">
-                    <div><b>${w.username}</b> | $${w.amountUsd} (${w.coin})</div>
-                    <div style="font-size:10px; color:#555;">Addr: ${w.address}</div>
-                    <button onclick="approveWithdrawal(${w.id})" style="background:#22c55e; color:white; border:none; padding:4px; border-radius:4px;">Approve</button>
-                </div>
-            `).join('') || '<div>No pending withdrawals</div>';
+                document.getElementById('admin-wd-requests').innerHTML = withdrawalRequests.filter(w => w.status === 'Pending').map(w => `
+                    <div class="history-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
+                        <span><b>User ID: ${w.userId}</b> requests $${w.amount}</span>
+                        <span style="font-size:10px; color:#555; word-break:break-all;">Address: ${w.address}</span>
+                        <button onclick="approveWithdrawal(${w.id})" style="background:#22c55e; color:white; border:none; padding:4px 8px; border-radius:4px; cursor:pointer; align-self:flex-end;">Approve Paid</button>
+                    </div>
+                `).join('') || '<div style="color:gray;">No pending withdrawals</div>';
+            }
         }
 
         function approveDeposit(id) {
-            let dep = systemDeposits.find(d => d.id === id);
-            if (dep) {
-                dep.status = 'Approved';
-                let bonus = dep.amountUsd * (1 + config.firstDepositBonusPct / 100);
-                currentUser.balance += bonus;
-                showToast("Deposit Approved!");
+            let req = depositRequests.find(d => d.id === id);
+            if (req) {
+                req.status = 'Approved';
+                currentUser.balance += req.amount;
+                showToast("Deposit approved successfully!");
                 updateUI();
             }
         }
 
         function approveWithdrawal(id) {
-            let wd = systemWithdrawals.find(w => w.id === id);
-            if (wd) {
-                wd.status = 'Approved';
-                showToast("Withdrawal Approved!");
+            let req = withdrawalRequests.find(w => w.id === id);
+            if (req) {
+                req.status = 'Approved';
+                showToast("Withdrawal marked as Paid!");
                 updateUI();
             }
         }
 
-        function saveAdminSettings() {
-            config.firstDepositBonusPct = parseFloat(document.getElementById('admin-dp-bonus').value);
-            config.gramExchangeRate = parseFloat(document.getElementById('admin-gram-rate').value);
-            showToast("Settings Saved!");
-        }
-
-        function buyHen(id) {
-            let hen = henPackages.find(h => h.id === id);
-            if (currentUser.balance >= hen.price) {
-                currentUser.balance -= hen.price;
-                currentUser.hens.push(hen);
-                showToast("Hen purchased!");
+        function buyItem(id) {
+            let item = [...shopHens, ...shopCorn].find(i => i.id === id);
+            if (currentUser.balance >= item.price) {
+                currentUser.balance -= item.price;
+                if (item.type === 'hen') {
+                    currentUser.hens.push(item);
+                    if (!currentUser.hasBoughtPackage) {
+                        currentUser.hasBoughtPackage = true;
+                        currentUser.referredEarnings += config.oneTimeRefReward;
+                        currentUser.referredCount += 1;
+                    }
+                }
+                if (item.type === 'corn') currentUser.corn += 50000;
+                showToast("Purchased successfully!");
                 updateUI();
             } else {
-                showToast("Not enough balance!");
+                showToast("Insufficient balance!");
             }
         }
 
-        function claimDailyReward() {
-            currentUser.balance += 0.01;
-            showToast("Claimed $0.01 reward!");
+        function feedHens() {
+            if (currentUser.corn >= 1000) {
+                currentUser.corn -= 1000;
+                showToast("Hens fed successfully!");
+                updateUI();
+            } else {
+                showToast("Not enough corn in silo!");
+            }
+        }
+
+        function claimJoiningBonus() {
+            currentUser.balance += config.joiningBonus;
+            currentUser.withdrawable += config.joiningBonus;
+            showToast(`Claimed $${config.joiningBonus} joining bonus!`);
             updateUI();
         }
 
@@ -470,17 +641,58 @@
             if (currentUser.eggs <= 0) return;
             let val = currentUser.eggs * 0.0000027;
             currentUser.balance += val;
+            currentUser.withdrawable += val;
             currentUser.eggs = 0;
-            showToast(`Sold eggs for $${val.toFixed(4)}`);
+            showToast("Eggs sold!");
             updateUI();
         }
 
-        function eggProductionCycle() {
-            if (currentUser.hens.length > 0) {
-                currentUser.eggs += currentUser.hens.length * 10;
-                updateUI();
-            }
+        function copyRefLink() {
+            navigator.clipboard.writeText(document.getElementById('ref-link').value);
+            showToast("Referral link copied!");
+        }
+
+        // --- ADMIN CONTROLS ---
+        function setMaintenance(status) {
+            config.maintenanceMode = status;
+            document.getElementById('maintenance-screen').style.display = status ? 'flex' : 'none';
+            showToast(status ? "Maintenance ON!" : "Maintenance OFF!");
+        }
+
+        function saveAdminConfigs() {
+            config.minDeposit = parseFloat(document.getElementById('adm-min-dp').value) || 3.0;
+            config.minWithdraw = parseFloat(document.getElementById('adm-min-wd').value) || 0.01;
+            config.freeWithdrawLimit = parseInt(document.getElementById('adm-free-wd').value) || 1;
+            config.joiningBonus = parseFloat(document.getElementById('adm-join-bonus').value) || 0.01;
+            config.oneTimeRefReward = parseFloat(document.getElementById('adm-onetime-ref').value) || 0.02;
+            config.refCommissionPct = parseInt(document.getElementById('adm-ref-comm').value) || 10;
+            config.gramRate = parseFloat(document.getElementById('adm-gram-rate').value) || 0.92;
+            config.usdtRate = parseFloat(document.getElementById('adm-usdt-rate').value) || 1.0;
+            showToast("Settings Saved Successfully!");
+            updateUI();
+        }
+
+        function saveAdminLinks() {
+            config.depositAddress = document.getElementById('adm-dp-address').value.trim();
+            config.mainChannelLink = document.getElementById('adm-main-link').value.trim();
+            config.withdrawChannelLink = document.getElementById('adm-wd-link').value.trim();
+            showToast("Wallet & Channels Saved!");
+            updateUI();
+        }
+
+        function adminModifyBalance(action) {
+            let amt = parseFloat(document.getElementById('adm-target-amt').value) || 0;
+            if (action === 'add') currentUser.balance += amt;
+            else currentUser.balance = Math.max(0, currentUser.balance - amt);
+            showToast(`Balance ${action}ed successfully!`);
+            updateUI();
+        }
+
+        function adminBanUser(status) {
+            let banId = document.getElementById('adm-target-id').value;
+            if (!banId) { showToast("Enter User ID!"); return; }
+            showToast(status ? `User ${banId} Banned!` : `User ${banId} Unbanned!`);
         }
     </script>
 </body>
-                                                                                                                                    </html>
+                </html>
