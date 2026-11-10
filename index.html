@@ -45,9 +45,14 @@
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .item-card { background: #fff; border-radius: var(--border-radius); padding: 12px; text-align: center; border: 1px solid #eef2f5; position: relative; }
         .badge { position: absolute; top: 8px; right: 8px; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+        .item-img { width: 64px; height: 64px; object-fit: contain; margin: 8px auto; display: block; }
         .item-title { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-        .item-rate { font-size: 11px; color: var(--text-sub); }
-        .item-price-btn { background: var(--primary-cyan); border: none; padding: 8px; border-radius: 10px; font-weight: bold; width: 100%; margin-top: 8px; cursor: pointer; }
+        .item-rate { font-size: 11px; color: var(--text-sub); margin-bottom: 6px; }
+        .item-price-btn { background: var(--primary-cyan); border: none; padding: 8px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
+
+        .streak-grid { display: flex; gap: 6px; justify-content: space-between; margin-top: 8px; }
+        .streak-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 4px; text-align: center; flex: 1; font-size: 10px; }
+        .streak-box.completed { background: #dcfce7; border-color: #bbf7d0; color: #15803d; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; border-top: 1px solid #edf2f7; padding: 6px 0; z-index: 100; }
         .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--text-sub); border: none; background: none; cursor: pointer; }
@@ -65,6 +70,11 @@
         .status-badge { padding: 2px 6px; border-radius: 4px; font-size: 9px; font-weight: bold; }
         .status-pending { background: #fef3c7; color: #d97706; }
         .status-approved { background: #dcfce7; color: #15803d; }
+        .status-qualified { background: #dcfce7; color: #15803d; }
+        .status-unqualified { background: #fee2e2; color: #b91c1c; }
+        
+        .copy-box { display: flex; align-items: center; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 6px 10px; margin-bottom: 10px; justify-content: space-between; font-size: 11px; word-break: break-all; text-align: left; }
+        .copy-btn { background: var(--primary-cyan); border: none; padding: 4px 8px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 10px; margin-left: 6px; white-space: nowrap; }
     </style>
 </head>
 <body>
@@ -133,13 +143,28 @@
             </div>
         </div>
 
+        <!-- DAILY CORN CHECK-IN -->
+        <div class="card">
+            <div style="font-weight:bold; font-size:13px; margin-bottom:4px;">Daily corn check-in</div>
+            <div style="font-size:11px; color:var(--text-sub); margin-bottom:8px;">Come back every day – the streak grows</div>
+            <div class="streak-grid">
+                <div class="streak-box completed">Day 1<br>🌽 1k</div>
+                <div class="streak-box">Day 2<br>🌽 2k</div>
+                <div class="streak-box">Day 3<br>🌽 3k</div>
+                <div class="streak-box">Day 4<br>🌽 4k</div>
+                <div class="streak-box">Day 5<br>🌽 5k</div>
+                <div class="streak-box">Day 6<br>🌽 6k</div>
+                <div class="streak-box">Day 7<br>🌽 7k</div>
+            </div>
+        </div>
+
         <div class="card">
             <div style="font-weight:bold; margin-bottom:8px;">Joining Bonus</div>
-            <button onclick="claimJoiningBonus()" class="btn-primary">Claim Joining Bonus ($<span id="lbl-join-bonus">0.01</span>)</button>
+            <button id="btn-join-bonus" onclick="claimJoiningBonus()" class="btn-primary">Claim Joining Bonus ($<span id="lbl-join-bonus">0.01</span>)</button>
         </div>
     </div>
 
-    <!-- 2. SHOP TAB (Hens & Corn) -->
+    <!-- 2. SHOP TAB (Hens & Corn with Pictures) -->
     <div id="shop-tab" class="tab-content">
         <div class="shop-switch">
             <button id="btn-cat-hens" class="switch-btn active" onclick="setShopCategory('hens')">Hens</button>
@@ -163,6 +188,11 @@
 
         <!-- TOP UP -->
         <div id="topup-container" class="card">
+            <div class="card" style="background:#e6fcf5; border:1px solid #b2f2bb; padding:10px; text-align:center; margin-bottom:12px;">
+                <div style="font-weight:bold; color:#2b8a3e; font-size:12px;">+20% on your first top-up</div>
+                <div style="font-size:10px; color:#40c057;">Extra dollars to spend on your farm.</div>
+            </div>
+
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">COIN</div>
             <div style="display:flex; gap:10px; margin-bottom:12px;">
                 <button id="coin-gram" onclick="selectTopCoin('GRAM')" class="switch-btn active" style="border:1px solid var(--primary-cyan)">GRAM</button>
@@ -180,7 +210,6 @@
 
         <!-- WITHDRAW -->
         <div id="withdraw-container" class="card" style="display:none;">
-            <!-- Channels links -->
             <div style="margin-bottom: 12px; display:flex; gap:8px;">
                 <a id="link-main-chan" href="https://t.me/" target="_blank" class="btn-primary" style="background:#e0f2fe; color:#0284c7; font-size:12px; padding:10px;">📢 Main Channel</a>
                 <a id="link-wd-chan" href="https://t.me/" target="_blank" class="btn-primary" style="background:#dcfce7; color:#15803d; font-size:12px; padding:10px;">💳 Payout Channel</a>
@@ -188,7 +217,7 @@
 
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">WITHDRAWAL ADDRESS</div>
             <input type="text" id="wd-address-input" class="admin-input" placeholder="Enter TON/TRON address">
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">0.01</span> (Limit: <span id="lbl-free-wd">1</span> free/day)</div>
+            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">0.01</span> (No-Deposit Max WD limit: $<span id="lbl-no-dp-wd-limit">5.00</span>)</div>
             <input type="number" id="wd-amount-input" class="admin-input" placeholder="0.01">
             <button onclick="submitWithdrawal()" class="btn-primary">Withdraw</button>
 
@@ -212,30 +241,38 @@
         </div>
         <div class="stats-grid">
             <div class="stat-box">
-                <div style="font-size:10px; color:var(--text-sub);">Qualified Friends</div>
-                <div class="stat-val" id="ref-count">0</div>
+                <div style="font-size:10px; color:var(--text-sub);">Total Invited</div>
+                <div class="stat-val" id="ref-total-count">0</div>
+            </div>
+            <div class="stat-box">
+                <div style="font-size:10px; color:var(--text-sub);">Qualified</div>
+                <div class="stat-val" id="ref-qualified-count" style="color:#15803d;">0</div>
             </div>
             <div class="stat-box">
                 <div style="font-size:10px; color:var(--text-sub);">Earned</div>
                 <div class="stat-val">$<span id="ref-earned">0.00</span></div>
             </div>
         </div>
+
+        <div class="card">
+            <div style="font-weight:bold; font-size:12px; margin-bottom:8px;">Referral History (Qualified / Unqualified)</div>
+            <div id="friends-history-list" class="history-list"></div>
+        </div>
     </div>
 
-    <!-- 5. ADMIN TAB (Protected for ID: 7419171743) -->
+    <!-- 5. ADMIN TAB -->
     <div id="admin-tab" class="tab-content">
         <div class="card">
             <h2>👑 CHIKEN USDT Admin</h2>
             
-            <!-- LIMITS & CONFIGS -->
             <div class="admin-section">
                 <h4>⚙️ Limits, Rates & Referral Config</h4>
                 <label style="font-size:12px;">Minimum Deposit ($):</label>
                 <input type="number" step="0.1" id="adm-min-dp" class="admin-input" value="3.0">
                 <label style="font-size:12px;">Minimum Withdrawal ($):</label>
                 <input type="number" step="0.01" id="adm-min-wd" class="admin-input" value="0.01">
-                <label style="font-size:12px;">Free Withdrawals Limit (per day):</label>
-                <input type="number" id="adm-free-wd" class="admin-input" value="1">
+                <label style="font-size:12px;">No-Deposit Max Withdrawal Limit ($):</label>
+                <input type="number" step="0.1" id="adm-nodp-wd-limit" class="admin-input" value="5.0">
                 <label style="font-size:12px;">Joining Bonus ($):</label>
                 <input type="number" step="0.01" id="adm-join-bonus" class="admin-input" value="0.01">
                 <label style="font-size:12px;">One-time Referral Reward ($):</label>
@@ -249,7 +286,6 @@
                 <button onclick="saveAdminConfigs()" class="btn-primary">Save Settings</button>
             </div>
 
-            <!-- WALLET & CHANNELS -->
             <div class="admin-section">
                 <h4>🔗 Deposit Address & Channels</h4>
                 <label style="font-size:12px;">Deposit Address:</label>
@@ -261,7 +297,6 @@
                 <button onclick="saveAdminLinks()" class="btn-primary">Save Links</button>
             </div>
 
-            <!-- USER MANAGEMENT -->
             <div class="admin-section">
                 <h4>👥 User Balance & Ban Management</h4>
                 <label style="font-size:12px;">Target Telegram ID:</label>
@@ -278,7 +313,6 @@
                 </div>
             </div>
 
-            <!-- MAINTENANCE -->
             <div class="admin-section">
                 <h4>🛠️ Bot Maintenance Mode</h4>
                 <div style="display:flex; gap:10px; margin-top:8px;">
@@ -287,13 +321,11 @@
                 </div>
             </div>
 
-            <!-- PENDING DEPOSIT REQUESTS -->
             <div class="admin-section">
                 <h4>📥 Pending Deposit Requests</h4>
                 <div id="admin-dp-requests" class="history-list"></div>
             </div>
 
-            <!-- PENDING WITHDRAWAL REQUESTS -->
             <div class="admin-section">
                 <h4>📤 Pending Withdrawal Requests</h4>
                 <div id="admin-wd-requests" class="history-list"></div>
@@ -305,9 +337,20 @@
     <div id="invoice-modal" class="modal-overlay">
         <div class="modal-content">
             <h3>Deposit Invoice</h3>
-            <div style="font-size:12px; color:var(--text-sub); margin:10px 0;">Send to Address: <br><b id="modal-display-address">UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B</b></div>
-            <div style="font-size:11px; color:#ef4444; font-weight:bold; margin-bottom:6px;">MEMO (YOUR TELEGRAM ID): <span id="modal-memo">7419171743</span></div>
-            <div style="font-weight:bold; font-size:16px; margin-bottom:10px;"><span id="modal-pay-amount">2.76</span> <span id="modal-pay-coin">GRAM</span></div>
+            
+            <div style="font-size:11px; color:var(--text-sub); text-align:left; margin-bottom:2px;">Send to Address:</div>
+            <div class="copy-box">
+                <span id="modal-display-address">UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B</span>
+                <button onclick="copyToClipboard('modal-display-address')" class="copy-btn">Copy Addr</button>
+            </div>
+
+            <div style="font-size:11px; color:var(--text-sub); text-align:left; margin-bottom:2px;">MEMO (Your Telegram ID):</div>
+            <div class="copy-box">
+                <span id="modal-memo" style="font-weight:bold; color:#ef4444;">7419171743</span>
+                <button onclick="copyToClipboard('modal-memo')" class="copy-btn">Copy Memo</button>
+            </div>
+
+            <div style="font-weight:bold; font-size:15px; margin:10px 0;"><span id="modal-pay-amount">2.76</span> <span id="modal-pay-coin">GRAM</span></div>
             
             <div style="font-size:11px; color:var(--text-sub); text-align:left; margin-bottom:4px;">Paste Transaction Hash (Trx Hash):</div>
             <input type="text" id="modal-trx-input" class="admin-input" placeholder="Enter Trx Hash">
@@ -331,7 +374,7 @@
             adminTelegramId: 7419171743,
             minDeposit: 3.0,
             minWithdraw: 0.01,
-            freeWithdrawLimit: 1,
+            noDepositWdLimit: 5.0,
             joiningBonus: 0.01,
             oneTimeRefReward: 0.02,
             refCommissionPct: 10,
@@ -350,29 +393,41 @@
             withdrawable: 0.0198,
             eggs: 36,
             corn: 0,
-            hens: [],
+            hens: [
+                { id: 1, name: "Baby Put", eggsPerDay: 5000, price: 0.50 } // ডিফল্ট ১টি মুরগি ধরা আছে
+            ],
+            hasClaimedBonus: false,
+            hasDeposited: false,
             hasBoughtPackage: false,
-            referredCount: 0,
             referredEarnings: 0,
             isBanned: false
         };
 
         let depositRequests = [];
         let withdrawalRequests = [];
+        let referralList = [
+            { username: "@n0_lname0", status: "Qualified", date: "11/07/26" },
+            { username: "@ahmedhossano", status: "Qualified", date: "11/07/26" },
+            { username: "@telegram_user_99", status: "Unqualified", date: "11/08/26" }
+        ];
+
         let pendingDepositAmount = 3.0;
         let activeTopCoin = 'GRAM';
         let shopCategory = 'hens';
 
         const shopHens = [
-            { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50 },
-            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50 },
-            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00 },
-            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00 }
+            { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
+            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
+            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
+            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
+            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
+            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" }
         ];
 
         const shopCorn = [
-            { id: 101, type: 'corn', name: "Corn Bag", rate: "+50,000 Corn", price: 0.15 },
-            { id: 102, type: 'corn', name: "Corn Sack", rate: "+250,000 Corn", price: 0.50 }
+            { id: 101, type: 'corn', name: "Corn Bag", rate: "+50,000 Corn", price: 0.15, img: "https://cdn-icons-png.flfln.com/icons/png/512/2921/2921822.png" },
+            { id: 102, type: 'corn', name: "Corn Sack", rate: "+250,000 Corn", price: 0.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/2921/2921822.png" },
+            { id: 103, type: 'corn', name: "Corn Silo", rate: "+480,000 Corn", price: 1.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/2921/2921822.png" }
         ];
 
         window.onload = function() {
@@ -405,6 +460,12 @@
             setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
+        function copyToClipboard(elementId) {
+            let text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text);
+            showToast("Copied to clipboard!");
+        }
+
         function switchTab(tabId) {
             if (tabId === 'admin' && currentUser.telegramId !== config.adminTelegramId) {
                 showToast("Access Denied!");
@@ -423,11 +484,19 @@
             document.getElementById('egg-count').innerText = currentUser.eggs;
             document.getElementById('egg-val').innerText = (currentUser.eggs * 0.0000027).toFixed(4);
             document.getElementById('corn-count').innerText = currentUser.corn.toLocaleString();
-            document.getElementById('hen-count').innerText = currentUser.hens.length;
+            
+            // লাইভ মোট মুরগির সংখ্যা এবং কেনা মুরগির ওপর ভিত্তি করে লাইভ ডিম ও দৈনিক আয় ক্যালকুলেশন
+            let totalHens = currentUser.hens.length;
+            let totalEggsPerDay = currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0);
+            let totalDailyEarn = totalEggsPerDay * 0.0000027;
+
+            document.getElementById('hen-count').innerText = totalHens;
+            document.getElementById('daily-eggs').innerText = totalEggsPerDay.toLocaleString();
+            document.getElementById('daily-earn').innerText = totalDailyEarn.toFixed(2);
 
             document.getElementById('lbl-min-dp').innerText = config.minDeposit.toFixed(2);
             document.getElementById('lbl-min-wd').innerText = config.minWithdraw.toFixed(2);
-            document.getElementById('lbl-free-wd').innerText = config.freeWithdrawLimit;
+            document.getElementById('lbl-no-dp-wd-limit').innerText = config.noDepositWdLimit.toFixed(2);
             document.getElementById('lbl-join-bonus').innerText = config.joiningBonus.toFixed(2);
             document.getElementById('lbl-onetime-ref').innerText = config.oneTimeRefReward.toFixed(2);
             document.getElementById('lbl-ref-comm').innerText = config.refCommissionPct;
@@ -435,10 +504,23 @@
             document.getElementById('link-main-chan').href = config.mainChannelLink;
             document.getElementById('link-wd-chan').href = config.withdrawChannelLink;
 
-            document.getElementById('ref-count').innerText = currentUser.referredCount;
+            let totalRef = referralList.length;
+            let qualifiedRef = referralList.filter(r => r.status === 'Qualified').length;
+            document.getElementById('ref-total-count').innerText = totalRef;
+            document.getElementById('ref-qualified-count').innerText = qualifiedRef;
             document.getElementById('ref-earned').innerText = currentUser.referredEarnings.toFixed(2);
 
+            renderFriendsHistory();
             renderHistoryLists();
+        }
+
+        function renderFriendsHistory() {
+            document.getElementById('friends-history-list').innerHTML = referralList.map(ref => `
+                <div class="history-item">
+                    <span><b>${ref.username}</b> (${ref.date})</span>
+                    <span class="status-badge status-${ref.status.toLowerCase()}">${ref.status}</span>
+                </div>
+            `).join('') || '<div style="color:gray;">No referral history yet</div>';
         }
 
         function setShopCategory(cat) {
@@ -453,6 +535,7 @@
             document.getElementById('shop-container').innerHTML = items.map(item => `
                 <div class="item-card">
                     <div class="badge">${item.rate}</div>
+                    <img src="${item.img}" class="item-img" alt="Item">
                     <div class="item-title">${item.name}</div>
                     <button onclick="buyItem(${item.id})" class="item-price-btn">$${item.price.toFixed(2)}</button>
                 </div>
@@ -526,6 +609,10 @@
                 showToast(`Minimum withdrawal is $${config.minWithdraw}`);
                 return;
             }
+            if (!currentUser.hasDeposited && amt > config.noDepositWdLimit) {
+                showToast(`Without deposit, max withdrawal limit is $${config.noDepositWdLimit}!`);
+                return;
+            }
             if (amt > currentUser.withdrawable) {
                 showToast("Exceeds withdrawable balance!");
                 return;
@@ -586,6 +673,7 @@
             if (req) {
                 req.status = 'Approved';
                 currentUser.balance += req.amount;
+                currentUser.hasDeposited = true;
                 showToast("Deposit approved successfully!");
                 updateUI();
             }
@@ -605,11 +693,10 @@
             if (currentUser.balance >= item.price) {
                 currentUser.balance -= item.price;
                 if (item.type === 'hen') {
-                    currentUser.hens.push(item);
+                    currentUser.hens.push(item); // মুরগি কিনলে মুরগির লিস্টে যোগ হবে এবং লাইভ ইনকাম বেড়ে যাবে
                     if (!currentUser.hasBoughtPackage) {
                         currentUser.hasBoughtPackage = true;
                         currentUser.referredEarnings += config.oneTimeRefReward;
-                        currentUser.referredCount += 1;
                     }
                 }
                 if (item.type === 'corn') currentUser.corn += 50000;
@@ -631,6 +718,11 @@
         }
 
         function claimJoiningBonus() {
+            if (currentUser.hasClaimedBonus) {
+                showToast("You have already claimed your joining bonus!");
+                return;
+            }
+            currentUser.hasClaimedBonus = true;
             currentUser.balance += config.joiningBonus;
             currentUser.withdrawable += config.joiningBonus;
             showToast(`Claimed $${config.joiningBonus} joining bonus!`);
@@ -662,7 +754,7 @@
         function saveAdminConfigs() {
             config.minDeposit = parseFloat(document.getElementById('adm-min-dp').value) || 3.0;
             config.minWithdraw = parseFloat(document.getElementById('adm-min-wd').value) || 0.01;
-            config.freeWithdrawLimit = parseInt(document.getElementById('adm-free-wd').value) || 1;
+            config.noDepositWdLimit = parseFloat(document.getElementById('adm-nodp-wd-limit').value) || 5.0;
             config.joiningBonus = parseFloat(document.getElementById('adm-join-bonus').value) || 0.01;
             config.oneTimeRefReward = parseFloat(document.getElementById('adm-onetime-ref').value) || 0.02;
             config.refCommissionPct = parseInt(document.getElementById('adm-ref-comm').value) || 10;
@@ -695,4 +787,4 @@
         }
     </script>
 </body>
-                </html>
+</html>
