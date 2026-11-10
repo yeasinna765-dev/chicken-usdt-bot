@@ -262,32 +262,32 @@
             <div class="admin-section">
                 <h4>⚙️ Limits, Rates & Referral Config</h4>
                 <label style="font-size:12px;">Minimum Deposit ($):</label>
-                <input type="number" step="0.1" id="adm-min-dp" class="admin-input" value="3.0">
+                <input type="number" step="0.1" id="adm-min-dp" class="admin-input">
                 <label style="font-size:12px;">Minimum Withdrawal ($):</label>
-                <input type="number" step="0.01" id="adm-min-wd" class="admin-input" value="0.01">
+                <input type="number" step="0.01" id="adm-min-wd" class="admin-input">
                 <label style="font-size:12px;">No-Deposit Max Withdrawal Limit ($):</label>
-                <input type="number" step="0.1" id="adm-nodp-wd-limit" class="admin-input" value="5.0">
+                <input type="number" step="0.1" id="adm-nodp-wd-limit" class="admin-input">
                 <label style="font-size:12px;">Joining Bonus ($):</label>
-                <input type="number" step="0.01" id="adm-join-bonus" class="admin-input" value="0.01">
+                <input type="number" step="0.01" id="adm-join-bonus" class="admin-input">
                 <label style="font-size:12px;">One-time Referral Reward ($):</label>
-                <input type="number" step="0.01" id="adm-onetime-ref" class="admin-input" value="0.02">
+                <input type="number" step="0.01" id="adm-onetime-ref" class="admin-input">
                 <label style="font-size:12px;">Referral Deposit Commission (%):</label>
-                <input type="number" step="1" id="adm-ref-comm" class="admin-input" value="10">
+                <input type="number" step="1" id="adm-ref-comm" class="admin-input">
                 <label style="font-size:12px;">GRAM Exchange Rate (1 USDT = X GRAM):</label>
-                <input type="number" step="0.01" id="adm-gram-rate" class="admin-input" value="0.92">
+                <input type="number" step="0.01" id="adm-gram-rate" class="admin-input">
                 <label style="font-size:12px;">USDT Exchange Rate:</label>
-                <input type="number" step="0.01" id="adm-usdt-rate" class="admin-input" value="1.0">
+                <input type="number" step="0.01" id="adm-usdt-rate" class="admin-input">
                 <button onclick="saveAdminConfigs()" class="btn-primary">Save Settings</button>
             </div>
 
             <div class="admin-section">
                 <h4>🔗 Deposit Address & Channels</h4>
                 <label style="font-size:12px;">Deposit Address:</label>
-                <input type="text" id="adm-dp-address" class="admin-input" value="UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B">
+                <input type="text" id="adm-dp-address" class="admin-input">
                 <label style="font-size:12px;">Main Channel Link:</label>
-                <input type="text" id="adm-main-link" class="admin-input" value="https://t.me/your_main_channel">
+                <input type="text" id="adm-main-link" class="admin-input">
                 <label style="font-size:12px;">Payout Channel Link:</label>
-                <input type="text" id="adm-wd-link" class="admin-input" value="https://t.me/your_withdraw_channel">
+                <input type="text" id="adm-wd-link" class="admin-input">
                 <button onclick="saveAdminLinks()" class="btn-primary">Save Links</button>
             </div>
 
@@ -364,7 +364,8 @@
     </div>
 
     <script>
-        let config = {
+        // Persistent Global Config & State via localStorage
+        let config = JSON.parse(localStorage.getItem('chiken_config')) || {
             adminTelegramId: 7419171743,
             minDeposit: 3.0,
             minWithdraw: 0.01,
@@ -380,7 +381,6 @@
             maintenanceMode: false
         };
 
-        // Persistent User State with LocalStorage
         let currentUser = JSON.parse(localStorage.getItem('chiken_user')) || {
             telegramId: 7419171743,
             username: "@ur_yeasin",
@@ -409,19 +409,20 @@
         let activeTopCoin = 'GRAM';
         let shopCategory = 'hens';
 
+        // Fixed reliable image links for shop packages
         const shopHens = [
-            { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
-            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
-            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
-            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
-            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" },
-            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://cdn-icons-png.flfln.com/icons/png/512/3069/3069186.png" }
+            { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
+            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
+            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
+            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
+            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
+            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" }
         ];
 
         const shopCorn = [
-            { id: 101, type: 'corn', name: "Corn Bag", rate: "+50,000 Corn", price: 0.15, img: "https://cdn-icons-png.flfln.com/icons/png/512/2921/2921822.png" },
-            { id: 102, type: 'corn', name: "Corn Sack", rate: "+250,000 Corn", price: 0.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/2921/2921822.png" },
-            { id: 103, type: 'corn', name: "Corn Silo", rate: "+480,000 Corn", price: 1.50, img: "https://cdn-icons-png.flfln.com/icons/png/512/2921/2921822.png" }
+            { id: 101, type: 'corn', name: "Corn Bag", rate: "+50,000 Corn", price: 0.15, img: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png" },
+            { id: 102, type: 'corn', name: "Corn Sack", rate: "+250,000 Corn", price: 0.50, img: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png" },
+            { id: 103, type: 'corn', name: "Corn Silo", rate: "+480,000 Corn", price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png" }
         ];
 
         window.onload = function() {
@@ -436,14 +437,19 @@
                 return;
             }
 
+            if (config.maintenanceMode) {
+                document.getElementById('maintenance-screen').style.display = 'flex';
+            }
+
             document.getElementById('display-name').innerText = "CHIKEN USDT";
             document.getElementById('ref-link').value = `https://t.me/Chikenusdtbot?start=ref${currentUser.telegramId}`;
             
             if (currentUser.telegramId === config.adminTelegramId) {
                 document.getElementById('admin-nav-btn').style.display = 'flex';
+                loadAdminFormValues();
             }
 
-            // Background Mining Simulator
+            // Background Mining Simulator (Adds eggs every 5s)
             setInterval(() => {
                 if (currentUser.hens.length > 0 && currentUser.corn > 0) {
                     let totalEggsPerMin = Math.floor(currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0) / 2880);
@@ -459,6 +465,7 @@
         };
 
         function saveState() {
+            localStorage.setItem('chiken_config', JSON.stringify(config));
             localStorage.setItem('chiken_user', JSON.stringify(currentUser));
             localStorage.setItem('chiken_deposits', JSON.stringify(depositRequests));
             localStorage.setItem('chiken_withdrawals', JSON.stringify(withdrawalRequests));
@@ -483,10 +490,27 @@
                 showToast("Access Denied!");
                 return;
             }
+            if (tabId === 'admin') {
+                loadAdminFormValues();
+            }
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById(tabId + '-tab').classList.add('active');
             updateUI();
+        }
+
+        function loadAdminFormValues() {
+            document.getElementById('adm-min-dp').value = config.minDeposit;
+            document.getElementById('adm-min-wd').value = config.minWithdraw;
+            document.getElementById('adm-nodp-wd-limit').value = config.noDepositWdLimit;
+            document.getElementById('adm-join-bonus').value = config.joiningBonus;
+            document.getElementById('adm-onetime-ref').value = config.oneTimeRefReward;
+            document.getElementById('adm-ref-comm').value = config.refCommissionPct;
+            document.getElementById('adm-gram-rate').value = config.gramRate;
+            document.getElementById('adm-usdt-rate').value = config.usdtRate;
+            document.getElementById('adm-dp-address').value = config.depositAddress;
+            document.getElementById('adm-main-link').value = config.mainChannelLink;
+            document.getElementById('adm-wd-link').value = config.withdrawChannelLink;
         }
 
         function updateUI() {
@@ -820,6 +844,7 @@
         function setMaintenance(status) {
             config.maintenanceMode = status;
             document.getElementById('maintenance-screen').style.display = status ? 'flex' : 'none';
+            saveState();
             showToast(status ? "Maintenance ON!" : "Maintenance OFF!");
         }
 
@@ -832,6 +857,7 @@
             config.refCommissionPct = parseInt(document.getElementById('adm-ref-comm').value) || 10;
             config.gramRate = parseFloat(document.getElementById('adm-gram-rate').value) || 0.92;
             config.usdtRate = parseFloat(document.getElementById('adm-usdt-rate').value) || 1.0;
+            saveState();
             showToast("Settings Saved Successfully!");
             updateUI();
         }
@@ -840,6 +866,7 @@
             config.depositAddress = document.getElementById('adm-dp-address').value.trim();
             config.mainChannelLink = document.getElementById('adm-main-link').value.trim();
             config.withdrawChannelLink = document.getElementById('adm-wd-link').value.trim();
+            saveState();
             showToast("Wallet & Channels Saved!");
             updateUI();
         }
@@ -853,6 +880,7 @@
                 currentUser.balance = Math.max(0, currentUser.balance - amt);
                 currentUser.withdrawable = Math.max(0, currentUser.withdrawable - amt);
             }
+            saveState();
             showToast(`Balance ${action}ed successfully!`);
             updateUI();
         }
@@ -864,4 +892,4 @@
         }
     </script>
 </body>
-                                                                                                           </html>
+                    </html>
