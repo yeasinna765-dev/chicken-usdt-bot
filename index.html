@@ -47,11 +47,10 @@
         .badge { position: absolute; top: 8px; right: 8px; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
         .item-img { width: 64px; height: 64px; object-fit: contain; margin: 8px auto; display: block; }
         .item-title { font-size: 13px; font-weight: bold; margin-bottom: 4px; }
-        .item-rate { font-size: 11px; color: var(--text-sub); margin-bottom: 6px; }
         .item-price-btn { background: var(--primary-cyan); border: none; padding: 8px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; }
 
         .streak-grid { display: flex; gap: 6px; justify-content: space-between; margin-top: 8px; }
-        .streak-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 4px; text-align: center; flex: 1; font-size: 10px; }
+        .streak-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 4px; text-align: center; flex: 1; font-size: 10px; cursor: pointer; }
         .streak-box.completed { background: #dcfce7; border-color: #bbf7d0; color: #15803d; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; border-top: 1px solid #edf2f7; padding: 6px 0; z-index: 100; }
@@ -97,7 +96,7 @@
             </div>
         </div>
         <div class="header-balance">
-            $<span id="user-balance">0.0598</span>
+            $<span id="user-balance">0.0000</span>
             <button class="plus-btn" onclick="switchTab('wallet')">+</button>
         </div>
     </div>
@@ -112,7 +111,7 @@
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                     <div style="font-weight:bold; font-size:13px; color:#2b8a3e;">SELL EGGS</div>
-                    <div style="font-size:12px; color:#40c057;"><span id="egg-count">36</span> → +$<span id="egg-val">0.0001</span></div>
+                    <div style="font-size:12px; color:#40c057;"><span id="egg-count">0</span> eggs → +$<span id="egg-val">0.0000</span></div>
                 </div>
                 <button onclick="sellEggs()" class="btn-primary btn-green" style="width:auto; padding:8px 16px;">Sell Eggs</button>
             </div>
@@ -131,30 +130,24 @@
         <div class="stats-grid">
             <div class="stat-box">
                 <div style="font-size:11px; color:var(--text-sub);">Eggs / day</div>
-                <div class="stat-val">🥚 <span id="daily-eggs">5,000</span></div>
+                <div class="stat-val">🥚 <span id="daily-eggs">0</span></div>
             </div>
             <div class="stat-box">
                 <div style="font-size:11px; color:var(--text-sub);">Earning / day</div>
-                <div class="stat-val">$<span id="daily-earn">0.02</span></div>
+                <div class="stat-val">$<span id="daily-earn">0.00</span></div>
             </div>
             <div class="stat-box">
                 <div style="font-size:11px; color:var(--text-sub);">Hens</div>
-                <div class="stat-val">🐓 <span id="hen-count">1</span></div>
+                <div class="stat-val">🐓 <span id="hen-count">0</span></div>
             </div>
         </div>
 
         <!-- DAILY CORN CHECK-IN -->
         <div class="card">
             <div style="font-weight:bold; font-size:13px; margin-bottom:4px;">Daily corn check-in</div>
-            <div style="font-size:11px; color:var(--text-sub); margin-bottom:8px;">Come back every day – the streak grows</div>
-            <div class="streak-grid">
-                <div class="streak-box completed">Day 1<br>🌽 1k</div>
-                <div class="streak-box">Day 2<br>🌽 2k</div>
-                <div class="streak-box">Day 3<br>🌽 3k</div>
-                <div class="streak-box">Day 4<br>🌽 4k</div>
-                <div class="streak-box">Day 5<br>🌽 5k</div>
-                <div class="streak-box">Day 6<br>🌽 6k</div>
-                <div class="streak-box">Day 7<br>🌽 7k</div>
+            <div style="font-size:11px; color:var(--text-sub); margin-bottom:8px;">Claim your daily corn reward!</div>
+            <div class="streak-grid" id="streak-container">
+                <!-- Dynamically rendered -->
             </div>
         </div>
 
@@ -164,7 +157,7 @@
         </div>
     </div>
 
-    <!-- 2. SHOP TAB (Hens & Corn with Pictures) -->
+    <!-- 2. SHOP TAB -->
     <div id="shop-tab" class="tab-content">
         <div class="shop-switch">
             <button id="btn-cat-hens" class="switch-btn active" onclick="setShopCategory('hens')">Hens</button>
@@ -177,8 +170,8 @@
     <div id="wallet-tab" class="tab-content">
         <div class="card" style="background:linear-gradient(135deg, #19e6e6, #00b4d8); color:white;">
             <div style="font-size:12px;">BALANCE</div>
-            <div style="font-size:24px; font-weight:bold;">$<span id="wallet-balance">0.0598</span></div>
-            <div style="font-size:11px; opacity:0.9;">Withdrawable: $<span id="withdrawable-balance">0.0198</span></div>
+            <div style="font-size:24px; font-weight:bold;">$<span id="wallet-balance">0.0000</span></div>
+            <div style="font-size:11px; opacity:0.9;">Withdrawable: $<span id="withdrawable-balance">0.0000</span></div>
         </div>
 
         <div class="shop-switch">
@@ -386,30 +379,26 @@
             maintenanceMode: false
         };
 
-        let currentUser = {
+        // Persistent User State with localStorage
+        let currentUser = JSON.parse(localStorage.getItem('chiken_user')) || {
             telegramId: 7419171743,
             username: "@ur_yeasin",
-            balance: 0.0598,
-            withdrawable: 0.0198,
-            eggs: 36,
+            balance: 0.0000,
+            withdrawable: 0.0000,
+            eggs: 0,
             corn: 0,
-            hens: [
-                { id: 1, name: "Baby Put", eggsPerDay: 5000, price: 0.50 } // ডিফল্ট ১টি মুরগি ধরা আছে
-            ],
+            hens: [],
             hasClaimedBonus: false,
             hasDeposited: false,
-            hasBoughtPackage: false,
             referredEarnings: 0,
+            streakDay: 1,
+            lastStreakClaim: 0,
             isBanned: false
         };
 
-        let depositRequests = [];
-        let withdrawalRequests = [];
-        let referralList = [
-            { username: "@n0_lname0", status: "Qualified", date: "11/07/26" },
-            { username: "@ahmedhossano", status: "Qualified", date: "11/07/26" },
-            { username: "@telegram_user_99", status: "Unqualified", date: "11/08/26" }
-        ];
+        let depositRequests = JSON.parse(localStorage.getItem('chiken_deposits')) || [];
+        let withdrawalRequests = JSON.parse(localStorage.getItem('chiken_withdrawals')) || [];
+        let referralList = JSON.parse(localStorage.getItem('chiken_referrals')) || [];
 
         let pendingDepositAmount = 3.0;
         let activeTopCoin = 'GRAM';
@@ -449,9 +438,27 @@
                 document.getElementById('admin-nav-btn').style.display = 'flex';
             }
 
+            // Background Mining Simulator (Adds eggs every 5 seconds if hens > 0 and corn > 0)
+            setInterval(() => {
+                if (currentUser.hens.length > 0 && currentUser.corn > 0) {
+                    let totalEggsPerMin = Math.floor(currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0) / 2880);
+                    currentUser.eggs += Math.max(1, totalEggsPerMin);
+                    currentUser.corn = Math.max(0, currentUser.corn - 10);
+                    saveState();
+                    updateUI();
+                }
+            }, 5000);
+
             renderShop();
             updateUI();
         };
+
+        function saveState() {
+            localStorage.setItem('chiken_user', JSON.stringify(currentUser));
+            localStorage.setItem('chiken_deposits', JSON.stringify(depositRequests));
+            localStorage.setItem('chiken_withdrawals', JSON.stringify(withdrawalRequests));
+            localStorage.setItem('chiken_referrals', JSON.stringify(referralList));
+        }
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
@@ -481,11 +488,10 @@
             document.getElementById('user-balance').innerText = currentUser.balance.toFixed(4);
             document.getElementById('wallet-balance').innerText = currentUser.balance.toFixed(4);
             document.getElementById('withdrawable-balance').innerText = currentUser.withdrawable.toFixed(4);
-            document.getElementById('egg-count').innerText = currentUser.eggs;
+            document.getElementById('egg-count').innerText = currentUser.eggs.toLocaleString();
             document.getElementById('egg-val').innerText = (currentUser.eggs * 0.0000027).toFixed(4);
             document.getElementById('corn-count').innerText = currentUser.corn.toLocaleString();
             
-            // লাইভ মোট মুরগির সংখ্যা এবং কেনা মুরগির ওপর ভিত্তি করে লাইভ ডিম ও দৈনিক আয় ক্যালকুলেশন
             let totalHens = currentUser.hens.length;
             let totalEggsPerDay = currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0);
             let totalDailyEarn = totalEggsPerDay * 0.0000027;
@@ -510,17 +516,40 @@
             document.getElementById('ref-qualified-count').innerText = qualifiedRef;
             document.getElementById('ref-earned').innerText = currentUser.referredEarnings.toFixed(2);
 
+            if (currentUser.hasClaimedBonus) {
+                let btn = document.getElementById('btn-join-bonus');
+                btn.innerText = "Already Claimed";
+                btn.style.background = "#cbd5e1";
+                btn.style.color = "#64748b";
+                btn.style.cursor = "not-allowed";
+            }
+
+            renderStreakGrid();
             renderFriendsHistory();
             renderHistoryLists();
+            saveState();
         }
 
-        function renderFriendsHistory() {
-            document.getElementById('friends-history-list').innerHTML = referralList.map(ref => `
-                <div class="history-item">
-                    <span><b>${ref.username}</b> (${ref.date})</span>
-                    <span class="status-badge status-${ref.status.toLowerCase()}">${ref.status}</span>
-                </div>
-            `).join('') || '<div style="color:gray;">No referral history yet</div>';
+        function renderStreakGrid() {
+            let html = '';
+            let cornAmounts = [1000, 2000, 3000, 4000, 5000, 6000, 7000];
+            for (let i = 1; i <= 7; i++) {
+                let isComp = i < currentUser.streakDay;
+                let isCurrent = i === currentUser.streakDay;
+                html += `<div class="streak-box ${isComp ? 'completed' : ''}" ${isCurrent ? 'onclick="claimStreak()"' : ''} style="${isCurrent ? 'border:2px solid #00ca72; cursor:pointer;' : ''}">
+                    Day ${i}<br>🌽 ${(cornAmounts[i-1]/1000)}k
+                </div>`;
+            }
+            document.getElementById('streak-container').innerHTML = html;
+        }
+
+        function claimStreak() {
+            let cornAmounts = [1000, 2000, 3000, 4000, 5000, 6000, 7000];
+            let reward = cornAmounts[currentUser.streakDay - 1];
+            currentUser.corn += reward;
+            showToast(`Claimed 🌽 ${reward.toLocaleString()} corn!`);
+            currentUser.streakDay = currentUser.streakDay >= 7 ? 1 : currentUser.streakDay + 1;
+            updateUI();
         }
 
         function setShopCategory(cat) {
@@ -553,6 +582,8 @@
             activeTopCoin = coin;
             document.getElementById('coin-gram').classList.toggle('active', coin === 'GRAM');
             document.getElementById('coin-usdt').classList.toggle('active', coin === 'USDT');
+            document.getElementById('coin-gram').style.borderColor = coin === 'GRAM' ? 'var(--primary-cyan)' : '#cbd5e1';
+            document.getElementById('coin-usdt').style.borderColor = coin === 'USDT' ? 'var(--primary-cyan)' : '#cbd5e1';
         }
 
         function createInvoice() {
@@ -693,11 +724,8 @@
             if (currentUser.balance >= item.price) {
                 currentUser.balance -= item.price;
                 if (item.type === 'hen') {
-                    currentUser.hens.push(item); // মুরগি কিনলে মুরগির লিস্টে যোগ হবে এবং লাইভ ইনকাম বেড়ে যাবে
-                    if (!currentUser.hasBoughtPackage) {
-                        currentUser.hasBoughtPackage = true;
-                        currentUser.referredEarnings += config.oneTimeRefReward;
-                    }
+                    currentUser.hens.push(item);
+                    currentUser.referredEarnings += config.oneTimeRefReward;
                 }
                 if (item.type === 'corn') currentUser.corn += 50000;
                 showToast("Purchased successfully!");
@@ -744,6 +772,15 @@
             showToast("Referral link copied!");
         }
 
+        function renderFriendsHistory() {
+            document.getElementById('friends-history-list').innerHTML = referralList.map(ref => `
+                <div class="history-item">
+                    <span><b>${ref.username}</b> (${ref.date})</span>
+                    <span class="status-badge status-${ref.status.toLowerCase()}">${ref.status}</span>
+                </div>
+            `).join('') || '<div style="color:gray;">No referral history yet</div>';
+        }
+
         // --- ADMIN CONTROLS ---
         function setMaintenance(status) {
             config.maintenanceMode = status;
@@ -787,4 +824,4 @@
         }
     </script>
 </body>
-</html>
+                    </html>
