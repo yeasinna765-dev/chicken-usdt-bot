@@ -409,20 +409,20 @@
         let activeTopCoin = 'GRAM';
         let shopCategory = 'hens';
 
-        // Fixed reliable image links for shop packages
+        // Unique separate chicken package images
         const shopHens = [
             { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
-            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
-            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
-            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
-            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
-            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" }
+            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/3482/3482436.png" },
+            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://cdn-icons-png.flaticon.com/512/2619/2619554.png" },
+            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://cdn-icons-png.flaticon.com/512/1043/1043444.png" },
+            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069202.png" },
+            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://cdn-icons-png.flaticon.com/512/616/616408.png" }
         ];
 
         const shopCorn = [
             { id: 101, type: 'corn', name: "Corn Bag", rate: "+50,000 Corn", price: 0.15, img: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png" },
-            { id: 102, type: 'corn', name: "Corn Sack", rate: "+250,000 Corn", price: 0.50, img: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png" },
-            { id: 103, type: 'corn', name: "Corn Silo", rate: "+480,000 Corn", price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/2921/2921822.png" }
+            { id: 102, type: 'corn', name: "Corn Sack", rate: "+250,000 Corn", price: 0.50, img: "https://cdn-icons-png.flaticon.com/512/2921/2921808.png" },
+            { id: 103, type: 'corn', name: "Corn Silo", rate: "+480,000 Corn", price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/3175/3175151.png" }
         ];
 
         window.onload = function() {
@@ -437,8 +437,10 @@
                 return;
             }
 
-            if (config.maintenanceMode) {
+            // Maintenance mode check (Admin can bypass)
+            if (config.maintenanceMode && currentUser.telegramId !== config.adminTelegramId) {
                 document.getElementById('maintenance-screen').style.display = 'flex';
+                return;
             }
 
             document.getElementById('display-name').innerText = "CHIKEN USDT";
@@ -750,10 +752,9 @@
             if (req) {
                 req.status = 'Approved';
                 
-                // First Deposit 20% Bonus Calculation
                 let finalCreditedAmt = req.amount;
                 if (!currentUser.hasDeposited) {
-                    finalCreditedAmt += req.amount * 0.20; // +20% bonus
+                    finalCreditedAmt += req.amount * 0.20; // +20% first deposit bonus
                     showToast(`First deposit approved with +20% bonus!`);
                 } else {
                     showToast("Deposit approved successfully!");
@@ -843,7 +844,6 @@
         // --- ADMIN CONTROLS ---
         function setMaintenance(status) {
             config.maintenanceMode = status;
-            document.getElementById('maintenance-screen').style.display = status ? 'flex' : 'none';
             saveState();
             showToast(status ? "Maintenance ON!" : "Maintenance OFF!");
         }
@@ -892,4 +892,4 @@
         }
     </script>
 </body>
-                    </html>
+    </html>
