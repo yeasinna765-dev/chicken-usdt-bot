@@ -17,6 +17,14 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 70px; user-select: none; }
+        
+        /* START / WELCOME OVERLAY SCREEN */
+        #welcome-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #33f0ff, #00d2ff); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; padding: 20px; }
+        #welcome-screen img { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; border: 4px solid #fff; object-fit: cover; }
+        #welcome-screen h1 { font-size: 24px; margin-bottom: 8px; }
+        #welcome-screen p { font-size: 14px; opacity: 0.9; margin-bottom: 24px; }
+        .launch-btn { background: #00ca72; color: white; border: none; padding: 14px 32px; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
         .header { background: linear-gradient(135deg, #33f0ff, #00d2ff); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; color: white; }
         .profile { display: flex; align-items: center; gap: 10px; }
         .avatar { width: 42px; height: 42px; background: #fff; border-radius: 50%; border: 2px solid #fff; overflow: hidden; }
@@ -81,8 +89,16 @@
 
     <div id="toast" class="toast">Action notification</div>
 
+    <!-- /START WELCOME SCREEN -->
+    <div id="welcome-screen">
+        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=ChikenUSDTBot" alt="Bot Logo">
+        <h1>CHIKEN USDT BOT</h1>
+        <p>Welcome! Raise hens, collect eggs, and earn real USDT. Click below to launch the Mini App.</p>
+        <button class="launch-btn" onclick="launchMiniApp()">🚀 Launch Mini App</button>
+    </div>
+
     <!-- MAINTENANCE OVERLAY -->
-    <div id="maintenance-screen" style="position:fixed; top:0; left:0; right:0; bottom:0; background:#f4f6f0; z-index:9999; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
+    <div id="maintenance-screen" style="position:fixed; top:0; left:0; right:0; bottom:0; background:#f4f6f0; z-index:9998; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
         <h2 style="color:#ef4444; margin-bottom:10px;">🛠️ Bot Under Maintenance</h2>
         <p style="font-size:13px; color:#64748b;">We are currently upgrading our servers. Please check back later!</p>
     </div>
@@ -252,7 +268,7 @@
         </div>
     </div>
 
-    <!-- 5. ADMIN TAB -->
+    <!-- 5. ADMIN TAB (Protected for ID: 7419171743) -->
     <div id="admin-tab" class="tab-content">
         <div class="card">
             <h2>👑 CHIKEN USDT Admin</h2>
@@ -314,12 +330,12 @@
             </div>
 
             <div class="admin-section">
-                <h4>📥 Pending Deposit Requests</h4>
+                <h4>📥 All Pending Deposit Requests</h4>
                 <div id="admin-dp-requests" class="history-list"></div>
             </div>
 
             <div class="admin-section">
-                <h4>📤 Pending Withdrawal Requests</h4>
+                <h4>📤 All Pending Withdrawal Requests</h4>
                 <div id="admin-wd-requests" class="history-list"></div>
             </div>
         </div>
@@ -398,11 +414,9 @@
 
         let depositRequests = JSON.parse(localStorage.getItem('chiken_deposits')) || [];
         let withdrawalRequests = JSON.parse(localStorage.getItem('chiken_withdrawals')) || [];
-        let referralList = JSON.parse(localStorage.getItem('chiken_referrals')) || [
-            { username: "@n0_lname0", status: "Unqualified", date: "11/07/26" },
-            { username: "@ahmedhossano", status: "Unqualified", date: "11/07/26" },
-            { username: "@telegram_user_99", status: "Unqualified", date: "11/08/26" }
-        ];
+        
+        // Multi-user referral dictionary stored securely
+        let allReferrals = JSON.parse(localStorage.getItem('chiken_all_referrals')) || {};
 
         let pendingDepositAmount = 3.0;
         let activeTopCoin = 'GRAM';
@@ -436,6 +450,7 @@
                 return;
             }
 
+            // Maintenance mode check (Admin bypasses)
             if (config.maintenanceMode && currentUser.telegramId !== config.adminTelegramId) {
                 document.getElementById('maintenance-screen').style.display = 'flex';
                 return;
@@ -444,12 +459,19 @@
             document.getElementById('display-name').innerText = "CHIKEN USDT";
             document.getElementById('ref-link').value = `https://t.me/Chikenusdtbot?start=ref${currentUser.telegramId}`;
             
+            // Initialize referral list for current user if not exists
+            if (!allReferrals[currentUser.telegramId]) {
+                allReferrals[currentUser.telegramId] = [
+                    { username: "@user_sample_1", status: "Unqualified", date: "11/07/26" }
+                ];
+            }
+
             if (currentUser.telegramId === config.adminTelegramId) {
                 document.getElementById('admin-nav-btn').style.display = 'flex';
                 loadAdminFormValues();
             }
 
-            // Mining Simulation Engine (Active only when Hens & Corn available)
+            // Mining Simulation Engine
             setInterval(() => {
                 if (currentUser.hens.length > 0 && currentUser.corn > 0) {
                     let totalEggsPerMin = Math.floor(currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0) / 2880);
@@ -464,12 +486,16 @@
             updateUI();
         };
 
+        function launchMiniApp() {
+            document.getElementById('welcome-screen').style.display = 'none';
+        }
+
         function saveState() {
             localStorage.setItem('chiken_config', JSON.stringify(config));
             localStorage.setItem('chiken_user', JSON.stringify(currentUser));
             localStorage.setItem('chiken_deposits', JSON.stringify(depositRequests));
             localStorage.setItem('chiken_withdrawals', JSON.stringify(withdrawalRequests));
-            localStorage.setItem('chiken_referrals', JSON.stringify(referralList));
+            localStorage.setItem('chiken_all_referrals', JSON.stringify(allReferrals));
         }
 
         function showToast(msg) {
@@ -539,8 +565,9 @@
             document.getElementById('link-main-chan').href = config.mainChannelLink;
             document.getElementById('link-wd-chan').href = config.withdrawChannelLink;
 
-            let totalRef = referralList.length;
-            let qualifiedRef = referralList.filter(r => r.status === 'Qualified').length;
+            let userRefs = allReferrals[currentUser.telegramId] || [];
+            let totalRef = userRefs.length;
+            let qualifiedRef = userRefs.filter(r => r.status === 'Qualified').length;
             document.getElementById('ref-total-count').innerText = totalRef;
             document.getElementById('ref-qualified-count').innerText = qualifiedRef;
             document.getElementById('ref-earned').innerText = currentUser.referredEarnings.toFixed(2);
@@ -608,7 +635,7 @@
             document.getElementById('shop-container').innerHTML = items.map(item => `
                 <div class="item-card">
                     <div class="badge">${item.rate}</div>
-                    <img src="${item.img}" class="item-img" alt="Item">
+                    <img src="${item.img}" class="item-img" alt="Package Image">
                     <div class="item-title">${item.name}</div>
                     <button onclick="buyItem(${item.id})" class="item-price-btn">$${item.price.toFixed(2)}</button>
                 </div>
@@ -685,7 +712,6 @@
                 return;
             }
             
-            // Strict No-Deposit Withdrawal Limit Bypass Protection
             let allowedLimit = currentUser.hasDeposited ? currentUser.withdrawable : Math.min(config.noDepositWdLimit, config.noDepositWdLimit - currentUser.totalWithdrawn);
             if (!currentUser.hasDeposited && (currentUser.totalWithdrawn >= config.noDepositWdLimit || amt > allowedLimit)) {
                 showToast(`Without deposit, max withdrawal limit is $${config.noDepositWdLimit} total! Please deposit to unlock unlimited withdrawals.`);
@@ -717,6 +743,7 @@
         }
 
         function renderHistoryLists() {
+            // Filter history ONLY for the logged-in user
             document.getElementById('user-deposit-history').innerHTML = depositRequests.filter(d => d.userId === currentUser.telegramId).map(d => `
                 <div class="history-item">
                     <span>$${d.amount.toFixed(2)} | Trx: ${d.trxHash.substring(0,6)}..</span>
@@ -731,6 +758,7 @@
                 </div>
             `).join('') || '<div style="color:gray;">No withdrawal history</div>';
 
+            // Admin Panel requests view
             if (currentUser.telegramId === config.adminTelegramId) {
                 let pendingDeps = depositRequests.filter(d => d.status === 'Pending');
                 document.getElementById('admin-dp-requests').innerHTML = pendingDeps.map(d => `
@@ -759,7 +787,7 @@
                 
                 let finalCreditedAmt = req.amount;
                 if (!currentUser.hasDeposited) {
-                    finalCreditedAmt += req.amount * 0.20; // +20% first deposit bonus
+                    finalCreditedAmt += req.amount * 0.20; // +20% bonus
                     showToast(`First deposit approved with +20% bonus!`);
                 } else {
                     showToast("Deposit approved successfully!");
@@ -768,17 +796,6 @@
                 currentUser.balance += finalCreditedAmt;
                 currentUser.withdrawable += finalCreditedAmt;
                 currentUser.hasDeposited = true;
-                
-                // Mark referrals as qualified when user deposits
-                referralList.forEach(ref => {
-                    if (ref.status === "Unqualified") {
-                        ref.status = "Qualified";
-                        currentUser.referredEarnings += config.oneTimeRefReward;
-                        currentUser.balance += config.oneTimeRefReward;
-                        currentUser.withdrawable += config.oneTimeRefReward;
-                    }
-                });
-
                 updateUI();
             }
         }
@@ -800,6 +817,17 @@
                 
                 if (item.type === 'hen') {
                     currentUser.hens.push(item);
+                    
+                    // Award one-time referral bonus when user buys their first package
+                    let userRefs = allReferrals[currentUser.telegramId] || [];
+                    userRefs.forEach(ref => {
+                        if (ref.status === "Unqualified") {
+                            ref.status = "Qualified";
+                        }
+                    });
+                    currentUser.referredEarnings += config.oneTimeRefReward;
+                    currentUser.balance += config.oneTimeRefReward;
+                    currentUser.withdrawable += config.oneTimeRefReward;
                 }
                 if (item.type === 'corn') {
                     currentUser.corn += 50000;
@@ -850,7 +878,8 @@
         }
 
         function renderFriendsHistory() {
-            document.getElementById('friends-history-list').innerHTML = referralList.map(ref => `
+            let userRefs = allReferrals[currentUser.telegramId] || [];
+            document.getElementById('friends-history-list').innerHTML = userRefs.map(ref => `
                 <div class="history-item">
                     <span><b>${ref.username}</b> (${ref.date})</span>
                     <span class="status-badge status-${ref.status.toLowerCase()}">${ref.status}</span>
@@ -909,4 +938,4 @@
         }
     </script>
 </body>
-                    </html>
+    </html>
