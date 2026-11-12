@@ -147,9 +147,7 @@
         <div class="card">
             <div style="font-weight:bold; font-size:13px; margin-bottom:4px;">Daily corn check-in</div>
             <div style="font-size:11px; color:var(--text-sub); margin-bottom:8px;">Claim your daily corn reward (Once per day)!</div>
-            <div class="streak-grid" id="streak-container">
-                <!-- Dynamically rendered -->
-            </div>
+            <div class="streak-grid" id="streak-container"></div>
         </div>
 
         <div class="card">
@@ -211,7 +209,7 @@
 
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">WITHDRAWAL ADDRESS</div>
             <input type="text" id="wd-address-input" class="admin-input" placeholder="Enter TON/TRON address">
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">0.01</span> (No-Deposit Max WD limit: $<span id="lbl-no-dp-wd-limit">5.00</span>)</div>
+            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">0.01</span> (No-Deposit Max WD limit: $<span id="lbl-no-dp-wd-limit">1.00</span>)</div>
             <input type="number" id="wd-amount-input" class="admin-input" placeholder="0.01">
             <button onclick="submitWithdrawal()" class="btn-primary">Withdraw</button>
 
@@ -243,7 +241,7 @@
                 <div class="stat-val" id="ref-qualified-count" style="color:#15803d;">0</div>
             </div>
             <div class="stat-box">
-                <div style="font-size:10px; color:var(--text-sub);">Earned</div>
+                <div style="font-size:10px; color:var(--text-sub);">Total Earned</div>
                 <div class="stat-val">$<span id="ref-earned">0.00</span></div>
             </div>
         </div>
@@ -364,12 +362,12 @@
     </div>
 
     <script>
-        // Persistent Global Config & State via localStorage
+        // Persistent Config & State
         let config = JSON.parse(localStorage.getItem('chiken_config')) || {
             adminTelegramId: 7419171743,
             minDeposit: 3.0,
             minWithdraw: 0.01,
-            noDepositWdLimit: 5.0,
+            noDepositWdLimit: 1.0,
             joiningBonus: 0.01,
             oneTimeRefReward: 0.02,
             refCommissionPct: 10,
@@ -387,10 +385,11 @@
             balance: 0.0000,
             withdrawable: 0.0000,
             eggs: 0,
-            corn: 0,
+            corn: 1000,
             hens: [],
             hasClaimedBonus: false,
             hasDeposited: false,
+            totalWithdrawn: 0.0,
             referredEarnings: 0,
             streakDay: 1,
             lastStreakClaimDate: "",
@@ -400,8 +399,8 @@
         let depositRequests = JSON.parse(localStorage.getItem('chiken_deposits')) || [];
         let withdrawalRequests = JSON.parse(localStorage.getItem('chiken_withdrawals')) || [];
         let referralList = JSON.parse(localStorage.getItem('chiken_referrals')) || [
-            { username: "@n0_lname0", status: "Qualified", date: "11/07/26" },
-            { username: "@ahmedhossano", status: "Qualified", date: "11/07/26" },
+            { username: "@n0_lname0", status: "Unqualified", date: "11/07/26" },
+            { username: "@ahmedhossano", status: "Unqualified", date: "11/07/26" },
             { username: "@telegram_user_99", status: "Unqualified", date: "11/08/26" }
         ];
 
@@ -409,7 +408,7 @@
         let activeTopCoin = 'GRAM';
         let shopCategory = 'hens';
 
-        // Unique separate chicken package images
+        // High quality distinct package chicken pictures
         const shopHens = [
             { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
             { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/3482/3482436.png" },
@@ -437,7 +436,6 @@
                 return;
             }
 
-            // Maintenance mode check (Admin can bypass)
             if (config.maintenanceMode && currentUser.telegramId !== config.adminTelegramId) {
                 document.getElementById('maintenance-screen').style.display = 'flex';
                 return;
@@ -451,12 +449,12 @@
                 loadAdminFormValues();
             }
 
-            // Background Mining Simulator (Adds eggs every 5s)
+            // Mining Simulation Engine (Active only when Hens & Corn available)
             setInterval(() => {
                 if (currentUser.hens.length > 0 && currentUser.corn > 0) {
                     let totalEggsPerMin = Math.floor(currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0) / 2880);
                     currentUser.eggs += Math.max(1, totalEggsPerMin);
-                    currentUser.corn = Math.max(0, currentUser.corn - 10);
+                    currentUser.corn = Math.max(0, currentUser.corn - 5);
                     saveState();
                     updateUI();
                 }
@@ -686,10 +684,14 @@
                 showToast(`Minimum withdrawal is $${config.minWithdraw}`);
                 return;
             }
-            if (!currentUser.hasDeposited && amt > config.noDepositWdLimit) {
-                showToast(`Without deposit, max withdrawal limit is $${config.noDepositWdLimit}!`);
+            
+            // Strict No-Deposit Withdrawal Limit Bypass Protection
+            let allowedLimit = currentUser.hasDeposited ? currentUser.withdrawable : Math.min(config.noDepositWdLimit, config.noDepositWdLimit - currentUser.totalWithdrawn);
+            if (!currentUser.hasDeposited && (currentUser.totalWithdrawn >= config.noDepositWdLimit || amt > allowedLimit)) {
+                showToast(`Without deposit, max withdrawal limit is $${config.noDepositWdLimit} total! Please deposit to unlock unlimited withdrawals.`);
                 return;
             }
+
             if (amt > currentUser.withdrawable) {
                 showToast("Exceeds withdrawable balance!");
                 return;
@@ -697,6 +699,9 @@
 
             currentUser.withdrawable -= amt;
             currentUser.balance -= amt;
+            if (!currentUser.hasDeposited) {
+                currentUser.totalWithdrawn += amt;
+            }
 
             withdrawalRequests.unshift({
                 id: Date.now(),
@@ -763,6 +768,17 @@
                 currentUser.balance += finalCreditedAmt;
                 currentUser.withdrawable += finalCreditedAmt;
                 currentUser.hasDeposited = true;
+                
+                // Mark referrals as qualified when user deposits
+                referralList.forEach(ref => {
+                    if (ref.status === "Unqualified") {
+                        ref.status = "Qualified";
+                        currentUser.referredEarnings += config.oneTimeRefReward;
+                        currentUser.balance += config.oneTimeRefReward;
+                        currentUser.withdrawable += config.oneTimeRefReward;
+                    }
+                });
+
                 updateUI();
             }
         }
@@ -784,9 +800,10 @@
                 
                 if (item.type === 'hen') {
                     currentUser.hens.push(item);
-                    currentUser.referredEarnings += config.oneTimeRefReward;
                 }
-                if (item.type === 'corn') currentUser.corn += 50000;
+                if (item.type === 'corn') {
+                    currentUser.corn += 50000;
+                }
                 
                 showToast("Purchased successfully!");
                 updateUI();
@@ -798,10 +815,10 @@
         function feedHens() {
             if (currentUser.corn >= 1000) {
                 currentUser.corn -= 1000;
-                showToast("Hens fed successfully!");
+                showToast("Hens fed successfully! Mining started.");
                 updateUI();
             } else {
-                showToast("Not enough corn in silo!");
+                showToast("Not enough corn in silo! Claim daily check-in or buy corn.");
             }
         }
 
@@ -823,7 +840,7 @@
             currentUser.balance += val;
             currentUser.withdrawable += val;
             currentUser.eggs = 0;
-            showToast("Eggs sold!");
+            showToast("Eggs sold successfully!");
             updateUI();
         }
 
@@ -851,7 +868,7 @@
         function saveAdminConfigs() {
             config.minDeposit = parseFloat(document.getElementById('adm-min-dp').value) || 3.0;
             config.minWithdraw = parseFloat(document.getElementById('adm-min-wd').value) || 0.01;
-            config.noDepositWdLimit = parseFloat(document.getElementById('adm-nodp-wd-limit').value) || 5.0;
+            config.noDepositWdLimit = parseFloat(document.getElementById('adm-nodp-wd-limit').value) || 1.0;
             config.joiningBonus = parseFloat(document.getElementById('adm-join-bonus').value) || 0.01;
             config.oneTimeRefReward = parseFloat(document.getElementById('adm-onetime-ref').value) || 0.02;
             config.refCommissionPct = parseInt(document.getElementById('adm-ref-comm').value) || 10;
