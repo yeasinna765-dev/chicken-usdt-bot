@@ -17,13 +17,9 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text-main); padding-bottom: 70px; user-select: none; }
-        
-        /* START / WELCOME OVERLAY SCREEN */
-        #welcome-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #33f0ff, #00d2ff); z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; color: white; padding: 20px; }
-        #welcome-screen img { width: 100px; height: 100px; margin-bottom: 20px; border-radius: 50%; border: 4px solid #fff; object-fit: cover; }
-        #welcome-screen h1 { font-size: 24px; margin-bottom: 8px; }
-        #welcome-screen p { font-size: 14px; opacity: 0.9; margin-bottom: 24px; }
-        .launch-btn { background: #00ca72; color: white; border: none; padding: 14px 32px; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+
+        /* MAINTENANCE OVERLAY */
+        #maintenance-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #f4f6f0; z-index: 9998; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
 
         .header { background: linear-gradient(135deg, #33f0ff, #00d2ff); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; color: white; }
         .profile { display: flex; align-items: center; gap: 10px; }
@@ -53,12 +49,12 @@
         .shop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .item-card { background: #ffffff; border-radius: var(--border-radius); padding: 14px; text-align: center; border: 1px solid #cbd5e1; position: relative; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .badge { position: absolute; top: 8px; right: 8px; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: bold; }
-        .item-img { width: 64px; height: 64px; object-fit: contain; margin: 8px auto; display: block; }
+        .item-img { width: 72px; height: 72px; object-fit: contain; margin: 8px auto; display: block; }
         .item-title { font-size: 13px; font-weight: bold; margin-bottom: 4px; color: #1e293b; }
         .item-price-btn { background: var(--primary-cyan); border: none; padding: 8px; border-radius: 10px; font-weight: bold; width: 100%; cursor: pointer; color: #000; margin-top: 6px; }
 
-        .streak-grid { display: flex; gap: 6px; justify-content: space-between; margin-top: 8px; }
-        .streak-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 4px; text-align: center; flex: 1; font-size: 10px; color: #475569; }
+        .streak-grid { display: flex; gap: 4px; justify-content: space-between; margin-top: 8px; }
+        .streak-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 2px; text-align: center; flex: 1; font-size: 10px; color: #475569; }
         .streak-box.completed { background: #dcfce7; border-color: #bbf7d0; color: #15803d; font-weight: bold; }
         .streak-box.active-claim { background: #fef08a; border-color: #facc15; color: #854d0e; font-weight: bold; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
@@ -89,16 +85,8 @@
 
     <div id="toast" class="toast">Action notification</div>
 
-    <!-- /START WELCOME SCREEN -->
-    <div id="welcome-screen">
-        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=ChikenUSDTBot" alt="Bot Logo">
-        <h1>CHIKEN USDT BOT</h1>
-        <p>Welcome! Raise hens, collect eggs, and earn real USDT. Click below to launch the Mini App.</p>
-        <button class="launch-btn" onclick="launchMiniApp()">🚀 Launch Mini App</button>
-    </div>
-
     <!-- MAINTENANCE OVERLAY -->
-    <div id="maintenance-screen" style="position:fixed; top:0; left:0; right:0; bottom:0; background:#f4f6f0; z-index:9998; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
+    <div id="maintenance-screen">
         <h2 style="color:#ef4444; margin-bottom:10px;">🛠️ Bot Under Maintenance</h2>
         <p style="font-size:13px; color:#64748b;">We are currently upgrading our servers. Please check back later!</p>
     </div>
@@ -168,7 +156,7 @@
 
         <div class="card">
             <div style="font-weight:bold; margin-bottom:8px;">Joining Bonus</div>
-            <button id="btn-join-bonus" onclick="claimJoiningBonus()" class="btn-primary">Claim Joining Bonus ($<span id="lbl-join-bonus">0.01</span>)</button>
+            <button id="btn-join-bonus" onclick="claimJoiningBonus()" class="btn-primary">Claim Joining Bonus ($<span id="lbl-join-bonus">0.5</span>)</button>
         </div>
     </div>
 
@@ -225,8 +213,8 @@
 
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">WITHDRAWAL ADDRESS</div>
             <input type="text" id="wd-address-input" class="admin-input" placeholder="Enter TON/TRON address">
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">0.01</span> (No-Deposit Max WD limit: $<span id="lbl-no-dp-wd-limit">1.00</span>)</div>
-            <input type="number" id="wd-amount-input" class="admin-input" placeholder="0.01">
+            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">1</span> (No-Deposit Max WD limit: $<span id="lbl-no-dp-wd-limit">1.00</span>)</div>
+            <input type="number" id="wd-amount-input" class="admin-input" placeholder="1">
             <button onclick="submitWithdrawal()" class="btn-primary">Withdraw</button>
 
             <div style="margin-top:14px; border-top:1px dashed #cbd5e1; padding-top:10px;">
@@ -268,7 +256,7 @@
         </div>
     </div>
 
-    <!-- 5. ADMIN TAB (Protected for ID: 7419171743) -->
+    <!-- 5. ADMIN TAB -->
     <div id="admin-tab" class="tab-content">
         <div class="card">
             <h2>👑 CHIKEN USDT Admin</h2>
@@ -330,12 +318,12 @@
             </div>
 
             <div class="admin-section">
-                <h4>📥 All Pending Deposit Requests</h4>
+                <h4>📥 Pending Deposit Requests</h4>
                 <div id="admin-dp-requests" class="history-list"></div>
             </div>
 
             <div class="admin-section">
-                <h4>📤 All Pending Withdrawal Requests</h4>
+                <h4>📤 Pending Withdrawal Requests</h4>
                 <div id="admin-wd-requests" class="history-list"></div>
             </div>
         </div>
@@ -382,12 +370,12 @@
         let config = JSON.parse(localStorage.getItem('chiken_config')) || {
             adminTelegramId: 7419171743,
             minDeposit: 3.0,
-            minWithdraw: 0.01,
+            minWithdraw: 1,
             noDepositWdLimit: 1.0,
-            joiningBonus: 0.01,
+            joiningBonus: 0.5,
             oneTimeRefReward: 0.02,
             refCommissionPct: 10,
-            gramRate: 0.92,
+            gramRate: 0.8,
             usdtRate: 1.0,
             depositAddress: "UQAdBuu0D1wmfQqC3uxIbjdCeysq8-yQ7B",
             mainChannelLink: "https://t.me/your_main_channel",
@@ -395,13 +383,15 @@
             maintenanceMode: false
         };
 
-        let currentUser = JSON.parse(localStorage.getItem('chiken_user')) || {
+        let allUsers = JSON.parse(localStorage.getItem('chiken_all_users')) || {};
+
+        let currentUser = {
             telegramId: 7419171743,
             username: "@ur_yeasin",
             balance: 0.0000,
             withdrawable: 0.0000,
             eggs: 0,
-            corn: 1000,
+            corn: 2000,
             hens: [],
             hasClaimedBonus: false,
             hasDeposited: false,
@@ -414,22 +404,20 @@
 
         let depositRequests = JSON.parse(localStorage.getItem('chiken_deposits')) || [];
         let withdrawalRequests = JSON.parse(localStorage.getItem('chiken_withdrawals')) || [];
-        
-        // Multi-user referral dictionary stored securely
         let allReferrals = JSON.parse(localStorage.getItem('chiken_all_referrals')) || {};
 
         let pendingDepositAmount = 3.0;
         let activeTopCoin = 'GRAM';
         let shopCategory = 'hens';
 
-        // High quality distinct package chicken pictures
+        // Precise user-provided chicken images for shop packages
         const shopHens = [
-            { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50, img: "https://cdn-icons-png.flaticon.com/512/3069/3069186.png" },
-            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://cdn-icons-png.flaticon.com/512/3482/3482436.png" },
-            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://cdn-icons-png.flaticon.com/512/2619/2619554.png" },
-            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://cdn-icons-png.flaticon.com/512/1043/1043444.png" },
-            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://cdn-icons-png.flaticon.com/512/3069/3069202.png" },
-            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://cdn-icons-png.flaticon.com/512/616/616408.png" }
+            { id: 1, type: 'hen', name: "Baby Put", rate: "4%/day", eggsPerDay: 5000, price: 0.50, img: "https://i.ibb.co.com/1Gv8Wf6/1000000806.jpg" },
+            { id: 2, type: 'hen', name: "Jun Put", rate: "2.7%/day", eggsPerDay: 10000, price: 1.50, img: "https://i.ibb.co.com/5X0W9zQ/1000000807.jpg" },
+            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://i.ibb.co.com/8K62B1z/1000000810.jpg" },
+            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://i.ibb.co.com/9v837Xp/1000000816.jpg" },
+            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://i.ibb.co.com/7v195W8/1000000811.jpg" },
+            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://i.ibb.co.com/4g3867F/1000000805.jpg" }
         ];
 
         const shopCorn = [
@@ -445,12 +433,20 @@
                 currentUser.username = "@" + (tgUser.username || "user_" + tgUser.id);
             }
 
+            // Load user state from database
+            if (allUsers[currentUser.telegramId]) {
+                currentUser = allUsers[currentUser.telegramId];
+            } else {
+                allUsers[currentUser.telegramId] = currentUser;
+                saveState();
+            }
+
             if (currentUser.isBanned) {
                 document.body.innerHTML = "<h1 style='text-align:center;margin-top:20vh;color:red;'>🚫 You are banned from this bot!</h1>";
                 return;
             }
 
-            // Maintenance mode check (Admin bypasses)
+            // Maintenance Mode Check (Admin bypasses)
             if (config.maintenanceMode && currentUser.telegramId !== config.adminTelegramId) {
                 document.getElementById('maintenance-screen').style.display = 'flex';
                 return;
@@ -459,10 +455,9 @@
             document.getElementById('display-name').innerText = "CHIKEN USDT";
             document.getElementById('ref-link').value = `https://t.me/Chikenusdtbot?start=ref${currentUser.telegramId}`;
             
-            // Initialize referral list for current user if not exists
             if (!allReferrals[currentUser.telegramId]) {
                 allReferrals[currentUser.telegramId] = [
-                    { username: "@user_sample_1", status: "Unqualified", date: "11/07/26" }
+                    { username: "@sample_friend_1", status: "Unqualified", date: "11/07/26" }
                 ];
             }
 
@@ -486,13 +481,10 @@
             updateUI();
         };
 
-        function launchMiniApp() {
-            document.getElementById('welcome-screen').style.display = 'none';
-        }
-
         function saveState() {
+            allUsers[currentUser.telegramId] = currentUser;
             localStorage.setItem('chiken_config', JSON.stringify(config));
-            localStorage.setItem('chiken_user', JSON.stringify(currentUser));
+            localStorage.setItem('chiken_all_users', JSON.stringify(allUsers));
             localStorage.setItem('chiken_deposits', JSON.stringify(depositRequests));
             localStorage.setItem('chiken_withdrawals', JSON.stringify(withdrawalRequests));
             localStorage.setItem('chiken_all_referrals', JSON.stringify(allReferrals));
@@ -609,7 +601,7 @@
         function claimStreak() {
             let todayStr = new Date().toDateString();
             if (currentUser.lastStreakClaimDate === todayStr) {
-                showToast("You have already claimed today's streak!");
+                showToast("You have already claimed today's check-in!");
                 return;
             }
 
@@ -617,7 +609,12 @@
             let reward = cornAmounts[currentUser.streakDay - 1];
             currentUser.corn += reward;
             currentUser.lastStreakClaimDate = todayStr;
-            currentUser.streakDay = currentUser.streakDay >= 7 ? 1 : currentUser.streakDay + 1;
+
+            if (currentUser.streakDay >= 7) {
+                currentUser.streakDay = 1;
+            } else {
+                currentUser.streakDay += 1;
+            }
             
             showToast(`Claimed 🌽 ${reward.toLocaleString()} corn successfully!`);
             updateUI();
@@ -743,7 +740,6 @@
         }
 
         function renderHistoryLists() {
-            // Filter history ONLY for the logged-in user
             document.getElementById('user-deposit-history').innerHTML = depositRequests.filter(d => d.userId === currentUser.telegramId).map(d => `
                 <div class="history-item">
                     <span>$${d.amount.toFixed(2)} | Trx: ${d.trxHash.substring(0,6)}..</span>
@@ -758,7 +754,6 @@
                 </div>
             `).join('') || '<div style="color:gray;">No withdrawal history</div>';
 
-            // Admin Panel requests view
             if (currentUser.telegramId === config.adminTelegramId) {
                 let pendingDeps = depositRequests.filter(d => d.status === 'Pending');
                 document.getElementById('admin-dp-requests').innerHTML = pendingDeps.map(d => `
@@ -784,18 +779,16 @@
             let req = depositRequests.find(d => d.id === id);
             if (req) {
                 req.status = 'Approved';
-                
+                let targetUsr = allUsers[req.userId] || currentUser;
                 let finalCreditedAmt = req.amount;
-                if (!currentUser.hasDeposited) {
-                    finalCreditedAmt += req.amount * 0.20; // +20% bonus
-                    showToast(`First deposit approved with +20% bonus!`);
-                } else {
-                    showToast("Deposit approved successfully!");
+                if (!targetUsr.hasDeposited) {
+                    finalCreditedAmt += req.amount * 0.20;
                 }
-
-                currentUser.balance += finalCreditedAmt;
-                currentUser.withdrawable += finalCreditedAmt;
-                currentUser.hasDeposited = true;
+                targetUsr.balance += finalCreditedAmt;
+                targetUsr.withdrawable += finalCreditedAmt;
+                targetUsr.hasDeposited = true;
+                saveState();
+                showToast("Deposit approved successfully!");
                 updateUI();
             }
         }
@@ -817,8 +810,6 @@
                 
                 if (item.type === 'hen') {
                     currentUser.hens.push(item);
-                    
-                    // Award one-time referral bonus when user buys their first package
                     let userRefs = allReferrals[currentUser.telegramId] || [];
                     userRefs.forEach(ref => {
                         if (ref.status === "Unqualified") {
@@ -887,11 +878,11 @@
             `).join('') || '<div style="color:gray;">No referral history yet</div>';
         }
 
-        // --- ADMIN CONTROLS ---
+        // --- ADMIN CONTROLS FIXED ---
         function setMaintenance(status) {
             config.maintenanceMode = status;
             saveState();
-            showToast(status ? "Maintenance ON!" : "Maintenance OFF!");
+            showToast(status ? "Maintenance Mode ON!" : "Maintenance Mode OFF!");
         }
 
         function saveAdminConfigs() {
@@ -901,7 +892,7 @@
             config.joiningBonus = parseFloat(document.getElementById('adm-join-bonus').value) || 0.01;
             config.oneTimeRefReward = parseFloat(document.getElementById('adm-onetime-ref').value) || 0.02;
             config.refCommissionPct = parseInt(document.getElementById('adm-ref-comm').value) || 10;
-            config.gramRate = parseFloat(document.getElementById('adm-gram-rate').value) || 0.92;
+            config.gramRate = parseFloat(document.getElementById('adm-gram-rate').value) || 0.8;
             config.usdtRate = parseFloat(document.getElementById('adm-usdt-rate').value) || 1.0;
             saveState();
             showToast("Settings Saved Successfully!");
@@ -918,24 +909,67 @@
         }
 
         function adminModifyBalance(action) {
+            let targetId = document.getElementById('adm-target-id').value.trim();
             let amt = parseFloat(document.getElementById('adm-target-amt').value) || 0;
-            if (action === 'add') {
-                currentUser.balance += amt;
-                currentUser.withdrawable += amt;
-            } else {
-                currentUser.balance = Math.max(0, currentUser.balance - amt);
-                currentUser.withdrawable = Math.max(0, currentUser.withdrawable - amt);
+            if (!targetId) {
+                showToast("Please enter Target Telegram ID!");
+                return;
             }
+
+            let targetUser = allUsers[targetId];
+            if (!targetUser) {
+                // If user doesn't exist in local storage yet, create dummy structure
+                targetUser = {
+                    telegramId: targetId,
+                    username: "@user_" + targetId,
+                    balance: 0,
+                    withdrawable: 0,
+                    eggs: 0,
+                    corn: 1000,
+                    hens: [],
+                    hasClaimedBonus: false,
+                    hasDeposited: false,
+                    totalWithdrawn: 0.0,
+                    referredEarnings: 0,
+                    streakDay: 1,
+                    lastStreakClaimDate: "",
+                    isBanned: false
+                };
+                allUsers[targetId] = targetUser;
+            }
+
+            if (action === 'add') {
+                targetUser.balance += amt;
+                targetUser.withdrawable += amt;
+            } else {
+                targetUser.balance = Math.max(0, targetUser.balance - amt);
+                targetUser.withdrawable = Math.max(0, targetUser.withdrawable - amt);
+            }
+
+            if (targetId == currentUser.telegramId) {
+                currentUser = targetUser;
+            }
+
             saveState();
-            showToast(`Balance ${action}ed successfully!`);
+            showToast(`Successfully ${action}ed $${amt} for user ${targetId}!`);
             updateUI();
         }
 
         function adminBanUser(status) {
-            let banId = document.getElementById('adm-target-id').value;
-            if (!banId) { showToast("Enter User ID!"); return; }
-            showToast(status ? `User ${banId} Banned!` : `User ${banId} Unbanned!`);
+            let banId = document.getElementById('adm-target-id').value.trim();
+            if (!banId) { 
+                showToast("Enter Target Telegram ID!"); 
+                return; 
+            }
+
+            if (allUsers[banId]) {
+                allUsers[banId].isBanned = status;
+            } else {
+                allUsers[banId] = { isBanned: status };
+            }
+            saveState();
+            showToast(status ? `User ${banId} has been Banned!` : `User ${banId} has been Unbanned!`);
         }
     </script>
 </body>
-    </html>
+</html>
