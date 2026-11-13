@@ -156,7 +156,7 @@
 
         <div class="card">
             <div style="font-weight:bold; margin-bottom:8px;">Joining Bonus</div>
-            <button id="btn-join-bonus" onclick="claimJoiningBonus()" class="btn-primary">Claim Joining Bonus ($<span id="lbl-join-bonus">0.01</span>)</button>
+            <button id="btn-join-bonus" onclick="claimJoiningBonus()" class="btn-primary">Claim Joining Bonus ($<span id="lbl-join-bonus">0.5</span>span>)</button>
         </div>
     </div>
 
@@ -185,8 +185,8 @@
         <!-- TOP UP -->
         <div id="topup-container" class="card">
             <div class="card" style="background:#e6fcf5; border:1px solid #b2f2bb; padding:10px; text-align:center; margin-bottom:12px;">
-                <div style="font-weight:bold; color:#2b8a3e; font-size:12px;">+20% on your first top-up bonus!</div>
-                <div style="font-size:10px; color:#40c057;">Extra 20% added when deposit is approved.</div>
+                <div style="font-weight:bold; color:#2b8a3e; font-size:12px;">+30% on your first top-up bonus!</div>
+                <div style="font-size:10px; color:#40c057;">Extra 30% added when deposit is approved.</div>
             </div>
 
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">COIN</div>
@@ -213,8 +213,8 @@
 
             <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">WITHDRAWAL ADDRESS</div>
             <input type="text" id="wd-address-input" class="admin-input" placeholder="Enter TON/TRON address">
-            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">0.01</span> (No-Deposit Max WD limit: $<span id="lbl-no-dp-wd-limit">1.00</span>)</div>
-            <input type="number" id="wd-amount-input" class="admin-input" placeholder="0.01">
+            <div style="font-size:12px; font-weight:bold; margin-bottom:6px;">AMOUNT (USD) - Min: $<span id="lbl-min-wd">1</span>span> (No-Deposit Max WD limit: $<span id="lbl-no-dp-wd-limit">1.00</span>)</div>
+            <input type="number" id="wd-amount-input" class="admin-input" placeholder="1">
             <button onclick="submitWithdrawal()" class="btn-primary">Withdraw</button>
 
             <div style="margin-top:14px; border-top:1px dashed #cbd5e1; padding-top:10px;">
@@ -370,9 +370,9 @@
         let config = JSON.parse(localStorage.getItem('chiken_config')) || {
             adminTelegramId: 7419171743,
             minDeposit: 3.0,
-            minWithdraw: 0.01,
+            minWithdraw: 1,
             noDepositWdLimit: 1.0,
-            joiningBonus: 0.01,
+            joiningBonus: 0.5,
             oneTimeRefReward: 0.02,
             refCommissionPct: 10,
             gramRate: 0.8,
@@ -410,14 +410,14 @@
         let activeTopCoin = 'GRAM';
         let shopCategory = 'hens';
 
-        // Updated Shop Hens with precise user-requested prices, daily earnings & working images
+        // Precise user-provided chicken images for shop packages
         const shopHens = [
-            { id: 1, type: 'hen', name: "Baby Put", rate: "$0.03/day", dailyUsdt: 0.03, eggsPerDay: 11111, price: 0.50, img: "https://i.ibb.co.com/1Gv8Wf6/1000000806.jpg" },
-            { id: 2, type: 'hen', name: "Jun Put", rate: "$0.17/day", dailyUsdt: 0.17, eggsPerDay: 62963, price: 2.00, img: "https://i.ibb.co.com/5X0W9zQ/1000000807.jpg" },
-            { id: 3, type: 'hen', name: "Take Put", rate: "$0.26/day", dailyUsdt: 0.26, eggsPerDay: 96296, price: 3.00, img: "https://i.ibb.co.com/8K62B1z/1000000810.jpg" },
-            { id: 4, type: 'hen', name: "Silkie Put", rate: "$0.45/day", dailyUsdt: 0.45, eggsPerDay: 166667, price: 5.00, img: "https://i.ibb.co.com/9v837Xp/1000000816.jpg" },
-            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "$1.02/day", dailyUsdt: 1.02, eggsPerDay: 377778, price: 12.00, img: "https://i.ibb.co.com/7v195W8/1000000811.jpg" },
-            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "$2.20/day", dailyUsdt: 2.20, eggsPerDay: 814815, price: 25.00, img: "https://i.ibb.co.com/4g3867F/1000000805.jpg" }
+            { id: 1, type: 'hen', name: "Baby Put", rate: "$0.03/day", eggsPerDay: 15000, price: 0.50, img: "https://kommodo.ai/i/NIsiauerbV2BErVcJeYk" },
+            { id: 2, type: 'hen', name: "Jun Put", rate: " $0.3/day", eggsPerDay: 150000, price: 3, img: "https://i.ibb.co.com/5X0W9zQ/1000000807.jpg" },
+            { id: 3, type: 'hen', name: "Take Put", rate: "3.7%/day", eggsPerDay: 27500, price: 3.00, img: "https://i.ibb.co.com/8K62B1z/1000000810.jpg" },
+            { id: 4, type: 'hen', name: "Silkie Put", rate: "4.4%/day", eggsPerDay: 55000, price: 5.00, img: "https://i.ibb.co.com/9v837Xp/1000000816.jpg" },
+            { id: 5, type: 'hen', name: "Rhode Island Put", rate: "5%/day", eggsPerDay: 150000, price: 12.00, img: "https://i.ibb.co.com/7v195W8/1000000811.jpg" },
+            { id: 6, type: 'hen', name: "Plymouth Rock Put", rate: "5.1%/day", eggsPerDay: 320000, price: 25.00, img: "https://i.ibb.co.com/4g3867F/1000000805.jpg" }
         ];
 
         const shopCorn = [
@@ -433,6 +433,7 @@
                 currentUser.username = "@" + (tgUser.username || "user_" + tgUser.id);
             }
 
+            // Load user state from database
             if (allUsers[currentUser.telegramId]) {
                 currentUser = allUsers[currentUser.telegramId];
             } else {
@@ -445,6 +446,7 @@
                 return;
             }
 
+            // Maintenance Mode Check (Admin bypasses)
             if (config.maintenanceMode && currentUser.telegramId !== config.adminTelegramId) {
                 document.getElementById('maintenance-screen').style.display = 'flex';
                 return;
@@ -539,7 +541,7 @@
             
             let totalHens = currentUser.hens.length;
             let totalEggsPerDay = currentUser.hens.reduce((sum, h) => sum + h.eggsPerDay, 0);
-            let totalDailyEarn = currentUser.hens.reduce((sum, h) => sum + (h.dailyUsdt || 0), 0);
+            let totalDailyEarn = totalEggsPerDay * 0.0000027;
 
             document.getElementById('hen-count').innerText = totalHens;
             document.getElementById('daily-eggs').innerText = totalEggsPerDay.toLocaleString();
@@ -876,7 +878,7 @@
             `).join('') || '<div style="color:gray;">No referral history yet</div>';
         }
 
-        // --- ADMIN CONTROLS ---
+        // --- ADMIN CONTROLS FIXED ---
         function setMaintenance(status) {
             config.maintenanceMode = status;
             saveState();
@@ -885,9 +887,9 @@
 
         function saveAdminConfigs() {
             config.minDeposit = parseFloat(document.getElementById('adm-min-dp').value) || 3.0;
-            config.minWithdraw = parseFloat(document.getElementById('adm-min-wd').value) || 0.01;
+            config.minWithdraw = parseFloat(document.getElementById('adm-min-wd').value) || 1;
             config.noDepositWdLimit = parseFloat(document.getElementById('adm-nodp-wd-limit').value) || 1.0;
-            config.joiningBonus = parseFloat(document.getElementById('adm-join-bonus').value) || 0.01;
+            config.joiningBonus = parseFloat(document.getElementById('adm-join-bonus').value) || 0.5;
             config.oneTimeRefReward = parseFloat(document.getElementById('adm-onetime-ref').value) || 0.02;
             config.refCommissionPct = parseInt(document.getElementById('adm-ref-comm').value) || 10;
             config.gramRate = parseFloat(document.getElementById('adm-gram-rate').value) || 0.8;
@@ -916,6 +918,7 @@
 
             let targetUser = allUsers[targetId];
             if (!targetUser) {
+                // If user doesn't exist in local storage yet, create dummy structure
                 targetUser = {
                     telegramId: targetId,
                     username: "@user_" + targetId,
